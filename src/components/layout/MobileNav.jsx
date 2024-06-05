@@ -16,7 +16,7 @@ export default function MobileNav() {
   };
   return (
     <>
-      <div className=" md:hidden ">
+      <div className="  sticky top-0  z-50 md:hidden ">
         <div>
           <div className=" p-4">
             <div className=" flex justify-between">

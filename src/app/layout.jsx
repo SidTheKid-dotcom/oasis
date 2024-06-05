@@ -24,7 +24,9 @@ export default function RootLayout({ children }) {
           <div className=" w-full">
             <TopBar />
             <MobileNav/>
+            <div className="  overflow-y-auto   md:h-[550px] scrollbar-hide  md:top-20   h-[790px]   " >
             {children}
+            </div>
           </div>
         </div>
       </body>
