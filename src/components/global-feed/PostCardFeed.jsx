@@ -1,20 +1,30 @@
-import ReactPlayer from "react-player";
+import ReactPlayer from 'react-player';
 import Link from 'next/link';
 
-export default function PostCardFeed({ loadMedia, likedState, followingState, post, isActive, muted, setMuted, postRef, playerRef }) {
-
+export default function PostCardFeed({
+    loadMedia,
+    likedState,
+    followingState,
+    post,
+    isActive,
+    muted,
+    setMuted,
+    playerRef,
+}) {
     const toggleMute = () => setMuted(prevMuted => !prevMuted);
 
     const renderMedia = () => {
         if (!loadMedia || !post.media_type) return <div className="w-full h-full bg-gray-300 animate-pulse" />;
-        
-        const media = post.media_type === 'video'
-            ? (
+
+        if (post.media_type === 'video') {
+            return (
                 <div>
                     <div>
-                        <button onClick={(e) => { e.stopPropagation(); toggleMute(); }}>{muted ? 'Unmute' : 'Mute'}</button>
+                        <button onClick={e => e.stopPropagation() || toggleMute()}>
+                            {muted ? 'Unmute' : 'Mute'}
+                        </button>
                     </div>
-                    <ReactPlayer id="post-video-player"
+                    <ReactPlayer
                         ref={playerRef}
                         controls
                         url={post.media}
@@ -24,42 +34,47 @@ export default function PostCardFeed({ loadMedia, likedState, followingState, po
                         playing={isActive}
                     />
                 </div>
-            )
-            : (
-                <figure className="w-full h-full">
-                    <img src={post.media} className="object-cover" width="100%" height="100%" alt="Post Media" />
-                </figure>
             );
+        }
+
         return (
-            <div className="rounded-[10px] w-full min-h-[50px] overflow-hidden">{media}</div>
+            <figure className="w-full h-full">
+                <img src={post.media} className="object-cover w-full h-full" alt="Post Media" />
+            </figure>
         );
     };
 
     return (
-        <div ref={postRef} className="lazy-post-card w-full pixel-text">
+        <div className="lazy-post-card w-full pixel-text">
             <div className="py-[1rem] px-[2rem] text-white flex flex-col min-h-[100px] border-y border-blue-500">
                 <section>
                     <div className="mt-[1rem] grid grid-cols-12 items-center">
                         <div className="col-span-2 rounded-full overflow-hidden w-[50px] h-[50px] border border-solid border-white">
                             <figure className="w-full h-full">
-                                {loadMedia ? (
-                                    <img src={post.user.profile_picture || '/github.svg'} className="w-full h-full object-cover" alt="Profile Picture" />
-                                ) : (
-                                    <img src='/github.svg' className="w-full h-full object-cover" alt="Profile Picture" />
-                                )}
+                                <img
+                                    src={loadMedia ? post.user.profile_picture || '/github.svg' : '/github.svg'}
+                                    className="w-full h-full object-cover"
+                                    alt="Profile Picture"
+                                />
                             </figure>
                         </div>
                         <div className="col-span-6 text-md flex flex-col justify-center">
                             <div className="font-bold">{post.user.username}</div>
-                            <div className="text-sm"><i>@{post.community.name}</i></div>
+                            <div className="text-sm">
+                                <i>@{post.community.name}</i>
+                            </div>
                         </div>
                         <div className="col-span-3 flex flex-col items-center text-[1rem]">
-                            {!followingState && <button className="m-2 p-2 px-3 min-w-[75px] bg-blue-500 rounded-[5px]">Follow</button>}
+                            {!followingState && (
+                                <button className="m-2 p-2 px-3 min-w-[75px] bg-blue-500 rounded-[5px]">
+                                    Follow
+                                </button>
+                            )}
                         </div>
                         <div className="col-span-1 flex flex-row justify-end">
                             <button>
                                 <figure>
-                                    <img src='/ellipsis-vertical-solid.svg' width="7px" height="12px" alt="Ellipsis Icon" />
+                                    <img src="/ellipsis-vertical-solid.svg" width="7px" height="12px" alt="Ellipsis Icon" />
                                 </figure>
                             </button>
                         </div>
@@ -82,7 +97,7 @@ export default function PostCardFeed({ loadMedia, likedState, followingState, po
                             <Link href={{ pathname: '/post-card', query: { postId: post.id } }}>
                                 <button>
                                     <figure>
-                                        <img src='/comment-regular.svg' width="25px" alt="Comment Icon" />
+                                        <img src="/comment-regular.svg" width="25px" alt="Comment Icon" />
                                     </figure>
                                     <figcaption>{post.comments}</figcaption>
                                 </button>
