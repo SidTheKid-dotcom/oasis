@@ -50,7 +50,7 @@ export default function MainProfile({ userInfo, setUserInfo, loading }) {
     }
 
     return (
-        <div className="px-5 flex flex-col min-h-[100vh] h-full text-white bg-[#323741]">
+        <div className="px-5 flex flex-col min-h-[100vh] h-full text-white bg-black pixel-text">
 
             {/* Overlay to disable other components when Links is active */}
             {
@@ -117,7 +117,7 @@ export default function MainProfile({ userInfo, setUserInfo, loading }) {
             </section>
             <section className="mx-[1.32rem]">
                 {
-                    ConditionalComponent && <ConditionalComponent posts={userInfo.posts} communities={userInfo.communities} events={userInfo.events} saved={userInfo.saved} setConfirmDelete={setConfirmDelete} />
+                    ConditionalComponent && <ConditionalComponent posts={userInfo.posts} communities={userInfo.communities} events={userInfo.events} saved={userInfo.saved} editable={userInfo.editable} setConfirmDelete={setConfirmDelete} />
                 }
             </section>
         </div>
@@ -131,7 +131,7 @@ const ProfileButton = ({ tag, index, activeIndex, setActiveIndex }) => {
     }
 
     return (
-        <button onClick={() => focusButton(index)} className={`px-4 py-2 flex justify-center bg-[#2a313d] border border-solid rounded-full ${activeIndex == index ? 'border-blue-500' : 'border-slate-400'}`}>
+        <button onClick={() => focusButton(index)} className={`px-4 py-2 flex justify-center border rounded-full ${activeIndex == index ? 'bg-blue-500' : 'border-slate-500'}`}>
             {tag}
         </button>
     )

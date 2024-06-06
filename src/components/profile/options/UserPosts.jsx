@@ -3,7 +3,7 @@ import axios from "axios";
 
 import Link from 'next/link';
 
-export default function UserPosts({ posts, setConfirmDelete }) {
+export default function UserPosts({ posts, setConfirmDelete, editable }) {
 
     /* useEffect(() => {
         const updateUserPosts = async () => {
@@ -48,9 +48,10 @@ export default function UserPosts({ posts, setConfirmDelete }) {
 
     return (
         <div>
-            <Link href={{ pathname: '/create/post' }}>
+            {editable && <Link href={{ pathname: '/create/post' }}>
                 <button className="p-2 border border-solid border-slate-400 bg-[#2a313d] font-[2rem] rounded-full">+ Create Post &nbsp;</button>
             </Link>
+            }
             {
                 posts.map((post, index) => {
                     const [likedSVG, setLikedSVG] = useState((post.liked) ? true : false);
@@ -72,17 +73,21 @@ export default function UserPosts({ posts, setConfirmDelete }) {
 
 
                     return (
-                        <div key={index} className="bg-[#2a313d] my-4 border border-solid border-slate-400 rounded-2xl py-4 px-6">
+                        <div key={index} className="bg-black my-4 border border-solid border-slate-400 rounded-2xl py-4 px-6">
                             <section className="flex flex-row justify-between">
                                 <div className="flex flex-col gap-2">
                                     <h1 className="font-bold text-2xl">{post.title}</h1>
                                     <h1 className="font-bold text-md">@{post.community.name}</h1>
                                 </div>
-                                <button onClick={() => handleDeletePost(post.id)}>
-                                    <figure>
-                                        <img src='/trash-solid.svg' width="20px" height="20px" className="mt-[-20px]"></img>
-                                    </figure>
-                                </button>
+                                {
+                                    editable && (
+                                        <button onClick={() => handleDeletePost(post.id)}>
+                                            <figure>
+                                                <img src='/trash-solid.svg' width="20px" height="20px" className="mt-[-20px]"></img>
+                                            </figure>
+                                        </button>
+                                    )
+                                }
                             </section>
                             <section className="my-4">{post.description}</section>
                             <section className="flex flex-row gap-5">

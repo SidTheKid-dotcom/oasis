@@ -44,7 +44,7 @@ export default function Posts({ post, isActive, setActiveVideoId, muted, setMute
             if (postRef.current) {
                 const viewPortCenter = window.innerHeight / 2;
                 const postRect = postRef.current.getBoundingClientRect();
-                
+
                 if (postRect.top < viewPortCenter && viewPortCenter < postRect.bottom) {
                     setActiveVideoId(post.id);
                 }
@@ -70,6 +70,8 @@ export default function Posts({ post, isActive, setActiveVideoId, muted, setMute
 
 
     return (
-        <PostCardFeed loadMedia={loadMedia} likedState={likedState} followingState={followingState} post={post} isActive={isActive} muted={muted} setMuted={setMuted} postRef={postRef} playerRef={playerRef} />
+        <div className="w-full bg-black">
+            <PostCardFeed loadMedia={loadMedia} likedState={likedState} followingState={followingState} post={post} isActive={isActive} muted={muted} setMuted={setMuted} postRef={postRef} playerRef={playerRef} />
+        </div>
     )
 }

@@ -7,7 +7,7 @@ export default function PostCardFeed({ loadMedia, likedState, followingState, po
 
     const renderMedia = () => {
         if (!loadMedia || !post.media_type) return <div className="w-full h-full bg-gray-300 animate-pulse" />;
-
+        
         const media = post.media_type === 'video'
             ? (
                 <div>
@@ -36,8 +36,8 @@ export default function PostCardFeed({ loadMedia, likedState, followingState, po
     };
 
     return (
-        <div ref={postRef} className="lazy-post-card w-full flex justify-center pixel-text">
-            <div className="my-[1rem] px-[2rem] text-white flex flex-col w-[70%] min-h-[100px] rounded-[15px] bg-black">
+        <div ref={postRef} className="lazy-post-card w-full pixel-text">
+            <div className="py-[1rem] px-[2rem] text-white flex flex-col min-h-[100px] border-y border-blue-500">
                 <section>
                     <div className="mt-[1rem] grid grid-cols-12 items-center">
                         <div className="col-span-2 rounded-full overflow-hidden w-[50px] h-[50px] border border-solid border-white">

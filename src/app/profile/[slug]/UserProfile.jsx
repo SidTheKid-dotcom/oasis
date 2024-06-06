@@ -47,14 +47,13 @@ export default function UserProfile({ params }) {
     }, [])
 
     return (
-        <div className="grid grid-cols-12">
-            <div className="col-span-2"></div>
-            <div className="col-span-7">
+        <div className="grid grid-cols-12 mt-[2rem]">
+            <div className="col-span-8">
                 {
                     loading ? <MainProfileSkeleton /> : <MainProfile userInfo={userInfo} setUserInfo={setUserInfo} loading={loading} />
                 }
             </div>
-            <div className="col-span-3">
+            <div className="col-span-4">
                 {
                     loading ? <FollowersCardSkeleton /> : <FollowersCard username={userInfo.username} followers={userInfo.followers} following={userInfo.following} loading={loading} />
                 }

@@ -7,14 +7,14 @@ export default function UserCommunities({ communities }) {
     return (
         <div>
             <div className="flex flex-row gap-4">
-                <button onClick={() => setActiveIndex(0)} className={`p-2 bg-[#2a313d] font-[2rem] rounded-full border border-solid ${activeIndex === 0 ? 'border-blue-500' : 'border-slate-400'}`}>&nbsp;Created&nbsp;</button>
-                <button onClick={() => setActiveIndex(1)} className={`p-2 bg-[#2a313d] font-[2rem] rounded-full border border-solid ${activeIndex === 1 ? 'border-blue-500' : 'border-slate-400'}`}>&nbsp;Joined&nbsp;</button>
+                <button onClick={() => setActiveIndex(0)} className={`p-2 bg-black font-[2rem] rounded-full border border-solid ${activeIndex === 0 ? 'bg-blue-500' : 'border-slate-400'}`}>&nbsp;Created&nbsp;</button>
+                <button onClick={() => setActiveIndex(1)} className={`p-2 bg-black font-[2rem] rounded-full border border-solid ${activeIndex === 1 ? 'bg-blue-500' : 'border-slate-400'}`}>&nbsp;Joined&nbsp;</button>
             </div>
             {
                 activeIndex === 0 ?
                     communities.created.map((community, index) => {
                         return (
-                            <div key={index} className="grid grid-cols-12 gap-3 bg-[#2a313d] my-4 border border-solid border-slate-400 rounded-2xl py-4 px-6">
+                            <div key={index} className="grid grid-cols-12 gap-3 bg-black my-4 border border-solid border-slate-400 rounded-2xl py-4 px-6">
                                 <section className="col-span-3 flex flex-col justify-center">
                                     <figure>
                                         <img src={community.icon} width="175px" className="mt-[3px] h-auto border border-solid border-white rounded-[1rem]"></img>
@@ -49,7 +49,7 @@ export default function UserCommunities({ communities }) {
                     :
                     communities.joined.map((community, index) => {
                         return (
-                            <div key={index} className="grid grid-cols-12 gap-3 bg-[#2a313d] my-4 border border-solid border-slate-400 rounded-2xl py-4 px-6">
+                            <div key={index} className="grid grid-cols-12 gap-3 bg-black my-4 border border-solid border-slate-400 rounded-2xl py-4 px-6">
                                 <section className="col-span-3 flex flex-col justify-center">
                                     <figure>
                                         <img src={community.icon} width="175px" className="mt-[3px] h-auto border border-solid border-white rounded-[1rem]"></img>

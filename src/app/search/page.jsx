@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import axios from "axios";
+import Posts from "@/components/global-feed/Post";
 
 export default function SearchPage() {
 
@@ -18,6 +19,9 @@ export default function SearchPage() {
     const [displayPosts, setDisplayPosts] = useState(true);
     const [displayUsers, setDisplayUsers] = useState(false);
     const [displayCommunities, setDisplayCommunities] = useState(false);
+
+    const [activeVideoId, setActiveVideoId] = useState(null);
+    const [muted, setMuted] = useState(true);
 
     useEffect(() => {
         if (search) {
@@ -56,15 +60,12 @@ export default function SearchPage() {
     };
 
     return (
-        <div className="grid grid-cols-12 bg-red-500">
+        <div className="grid grid-cols-12">
             <div className="col-span-8">
                 {
                     displayPosts && searchData.posts.length > 0 ? (
-                        searchData.posts.map((post) => (
-                            <div key={post.id}>
-                                <h1>{post.title}</h1>
-                                <p>{post.body}</p>
-                            </div>
+                        searchData.posts.map((post, index) => (
+                            <Posts key={index} post={post} isActive={false} setActiveVideoId={setActiveVideoId} muted={muted} setMuted={setMuted}/>
                         ))
                     ) : (
                         displayPosts && <p>No posts found.</p>

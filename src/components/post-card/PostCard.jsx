@@ -4,7 +4,7 @@ import ReactPlayer from "react-player";
 const PostCard = React.memo(({ post }) => {
     return (
         <div>
-            <div className="my-[1rem] px-[2rem] text-white flex flex-col w-full min-h-[100px] rounded-[15px] bg-[#2a313d]">
+            <div className="my-[1rem] px-[2rem] text-white flex flex-col w-full min-h-[100px] rounded-[15px] bg-black pixel-text">
                 <section>
                     <div className="mt-[1rem] grid grid-cols-12 items-center">
                         <div className="col-span-2 rounded-full overflow-hidden w-[50px] h-[50px] border border-solid border-white">
@@ -25,7 +25,7 @@ const PostCard = React.memo(({ post }) => {
                         <div className="col-span-3 flex flex-col items-center text-[1rem]">
                             {
                                 !post.isFollowing && (
-                                    <button className="m-2 p-2 px-3 min-w-[75px] border border-solid border-blue-500 rounded-[5px]">Follow&nbsp;+</button>
+                                    <button className="m-2 p-2 px-3 min-w-[75px] bg-blue-500 rounded-[5px]">Follow</button>
                                 )
                             }
                         </div>

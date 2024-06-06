@@ -134,7 +134,7 @@ export default function CommentSection({ postId, comments, setComments }) {
     ]); */
 
     return (
-        <div className="w-full bg-[#2a313d] text-white p-2 rounded-[10px]">
+        <div className="w-full bg-black pixel-text text-white p-2 rounded-[10px]">
             <CommentBox postId={postId} setComments={setComments} />
             <CommentFeed comments={comments} setComments={setComments}/>
         </div>
