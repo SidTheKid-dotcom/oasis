@@ -2,12 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import PostCardFeed from './PostCardFeed';
 
-export default function Posts({ post, isActive, setActiveVideoId, muted, setMuted }) {
+export default function Posts({ post, muted, setMuted }) {
     const [likedState, setLikedState] = useState(null);
     const [followingState, setFollowingState] = useState(null);
     const postRef = useRef(null);
     const playerRef = useRef(null);
     const [loadMedia, setLoadMedia] = useState(false);
+    const [isActive, setIsActive] = useState(false);
 
     const fetchPostState = async () => {
         try {
@@ -32,7 +33,9 @@ export default function Posts({ post, isActive, setActiveVideoId, muted, setMute
                     if (entry.isIntersecting) {
                         setLoadMedia(true);
                         fetchPostState();
-                        setActiveVideoId(post.id);
+                        setIsActive(true);
+                    } else {
+                        setIsActive(false);
                     }
                 });
             },
@@ -43,27 +46,18 @@ export default function Posts({ post, isActive, setActiveVideoId, muted, setMute
             observer.observe(postRef.current);
         }
 
-        const handleScroll = () => {
+        return () => {
             if (postRef.current) {
-                const viewPortCenter = window.innerHeight / 2;
-                const postRect = postRef.current.getBoundingClientRect();
-                if (postRect.top < viewPortCenter && viewPortCenter < postRect.bottom) {
-                    setActiveVideoId(post.id);
-                }
+                observer.unobserve(postRef.current);
             }
         };
-
-        window.addEventListener('scroll', handleScroll);
-
-        return () => {
-            observer.disconnect();
-            window.removeEventListener('scroll', handleScroll);
-        };
-    }, [post.id, setActiveVideoId]);
+    }, [post.id]);
 
     useEffect(() => {
         if (isActive) {
-            playerRef.current?.getInternalPlayer()?.play();
+            playerRef.current?.getInternalPlayer()?.play().catch(error => {
+                console.warn('Play interrupted: ', error);
+            });
         } else {
             playerRef.current?.getInternalPlayer()?.pause();
         }

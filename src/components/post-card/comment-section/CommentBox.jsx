@@ -82,7 +82,7 @@ export default function CommentBox({ postId, setComments }) {
     return (
         <div>
             {displayEmojiPicker && (
-                <div ref={emojiPickerRef} className="fixed top-0 left-0 z-index-99999999">
+                <div ref={emojiPickerRef} className="fixed top-[30%] left-[25%] z-index-99999999">
                     <EmojiPicker
                         onEmojiClick={handleEmojiClick}
                         emojiStyle="native"
@@ -93,7 +93,7 @@ export default function CommentBox({ postId, setComments }) {
                 </div>
             )}
             {displayGifPicker && (
-                <div ref={gifPickerRef} className="fixed top-0 left-0 z-index-99999999">
+                <div ref={gifPickerRef} className="fixed top-[30%] left-[22%] z-index-99999999">
                     <GifPicker
                         tenorApiKey={"AIzaSyB8irh6rYLNBmiOzVOiBkd8OPOpgdXVd_s"}
                         onGifClick={handleGifClick}
