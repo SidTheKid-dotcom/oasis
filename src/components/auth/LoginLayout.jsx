@@ -1,5 +1,5 @@
 'use client'
-import Form from './Form';
+import Form from './form';
 
 export default function LoginLayout() {
   return (

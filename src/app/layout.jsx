@@ -6,6 +6,7 @@ import "./globals.css";
 import Sidebar from "@/components/layout/Sidebar";
 import TopBar from "@/components/layout/TopBar";
 import MobileNav from "@/components/layout/MobileNav";
+import { AppContextProvider } from "@/components/layout/Context";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -42,6 +43,7 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang="en">
+      <AppContextProvider>
       <body className={`${inter.className} ${!token ? 'overflow-hidden' : ''}`}>
         {token && (
           <div className="hidden md:block">
@@ -52,6 +54,7 @@ export default function RootLayout({ children }) {
           {token ? renderAuthenticatedLayout() : renderUnauthenticatedLayout()}
         </div>
       </body>
+      </AppContextProvider>
     </html>
   );
 }

@@ -7,7 +7,6 @@ import LoginLayout from '../../components/auth/LoginLayout';
 function Auth() {
   const token = localStorage.getItem('token');
   const router = useRouter();
-
   return (
     <div className='h-[100%] w-3/4'>
         {token ? router.push('/')  : <LoginLayout/>}
