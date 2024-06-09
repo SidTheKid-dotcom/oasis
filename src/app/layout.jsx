@@ -1,6 +1,5 @@
 // app/layout.js or app/layout.jsx
 'use client'
-import { useEffect, useState } from "react";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/layout/Sidebar";

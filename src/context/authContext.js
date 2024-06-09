@@ -1,10 +1,12 @@
 // app/context/authContext.jsx
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
@@ -22,6 +24,12 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('token');
     setToken(null);
   };
+
+  useEffect(() => {
+    if (!token) {
+      router.push('/auth');
+    }
+  }, [token, router]);
 
   return (
     <AuthContext.Provider value={{ token, login, logout }}>

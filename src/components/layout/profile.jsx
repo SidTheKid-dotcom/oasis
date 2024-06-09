@@ -1,18 +1,14 @@
 import React, { useState, useContext } from 'react';
 import { useRouter } from "next/navigation";
 import { Context } from "./Context";
+import { useAuth } from "@/context/authContext";
 
 const Profile = () => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const { navBarData } = useContext(Context);
   const profilepic = navBarData.profile_picture;
-
-  const handleLogout = () => {
-    setIsOpen(!isOpen)
-    localStorage.removeItem("token");
-    router.push("/auth");
-  };
+  const { logout } = useAuth();
 
   const handleProfileClick = () => {
     router.push(`/profile/${navBarData.id}`);
@@ -99,7 +95,7 @@ const Profile = () => {
                 <span>Help Center</span>
               </a>
             </div>
-            <button className="flex justify-center gap-3 rounded-md bg-red-600 py-2 px-3 font-semibold hover:bg-red-500 focus:ring-2 focus:ring-red-400" onClick={handleLogout}>
+            <button className="flex justify-center gap-3 rounded-md bg-red-600 py-2 px-3 font-semibold hover:bg-red-500 focus:ring-2 focus:ring-red-400" onClick={logout}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
