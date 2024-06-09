@@ -1,63 +1,57 @@
+// components/user-profile/UserProfile.jsx
 'use client'
-
-import FollowersCard from "../../../components/profile/FollowersCard";
-import MainProfile from "../../../components/profile/MainProfile";
-
 import { useState, useEffect } from "react";
 import axios from "axios";
-
+import { useAuth } from "@/context/authContext";
+import FollowersCard from "../../../components/profile/FollowersCard";
+import MainProfile from "../../../components/profile/MainProfile";
 import FollowersCardSkeleton from "../../../components/profile/skeletons/FollowersCardSkeleton";
 import MainProfileSkeleton from "../../../components/profile/skeletons/MainProfileSkeleton";
 
 export default function UserProfile({ params }) {
+  const { token } = useAuth();
+  const [userInfo, setUserInfo] = useState({});
+  const [loading, setLoading] = useState(true);
 
-    const [userInfo, setUserInfo] = useState({});
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-
-        const fetchUserInfo = async () => {
-            try {
-
-                //Extract the user token from the cookie
-
-                const token = localStorage.getItem('token');
-
-                const response = await axios.get(`http://3.110.161.150:4000/api/user/profile?userId=${params.slug}`, {
-                    headers: {
-                        'Authorization': token,
-                        'Content-Type': 'application/json'
-                    }
-                });
-                console.log(response.data);
-                setUserInfo(response.data);
-                setLoading(false);
-            }
-            catch (error) {
-                console.log("error occured while fetching user's info: ", error);
-                setLoading(false);
-            }
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      if (token) {
+        try {
+          const response = await axios.get(`http://3.110.161.150:4000/api/user/profile?userId=${params.slug}`, {
+            headers: {
+              'Authorization': token,
+              'Content-Type': 'application/json',
+            },
+          });
+          console.log(response.data);
+          setUserInfo(response.data);
+        } catch (error) {
+          console.log("error occurred while fetching user's info: ", error);
+        } finally {
+          setLoading(false);
         }
+      }
+    };
 
-        fetchUserInfo();
+    fetchUserInfo();
+  }, [token, params.slug]);
 
-        return () => {
-            setUserInfo(prevUserInfo => prevUserInfo);
-        }
-    }, [])
-
-    return (
-        <div className="grid grid-cols-12 mt-[2rem]">
-            <div className="col-span-8">
-                {
-                    loading ? <MainProfileSkeleton /> : <MainProfile userInfo={userInfo} setUserInfo={setUserInfo} loading={loading} />
-                }
-            </div>
-            <div className="col-span-4">
-                {
-                    loading ? <FollowersCardSkeleton /> : <FollowersCard username={userInfo.username} followers={userInfo.followers} following={userInfo.following} loading={loading} />
-                }
-            </div>
-        </div>
-    );
+  return (
+    <div className="grid grid-cols-12 mt-[2rem]">
+      <div className="col-span-8">
+        {loading ? (
+          <MainProfileSkeleton />
+        ) : (
+          <MainProfile userInfo={userInfo} setUserInfo={setUserInfo} loading={loading} />
+        )}
+      </div>
+      <div className="col-span-4">
+        {loading ? (
+          <FollowersCardSkeleton />
+        ) : (
+          <FollowersCard username={userInfo.username} followers={userInfo.followers} following={userInfo.following} loading={loading} />
+        )}
+      </div>
+    </div>
+  );
 }
