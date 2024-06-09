@@ -1,9 +1,11 @@
 import ReactPlayer from 'react-player';
 import Link from 'next/link';
+import axios from "axios";
 
 export default function PostCardFeed({
     loadMedia,
     likedState,
+    setLikedState,
     followingState,
     post,
     isActive,
@@ -42,6 +44,25 @@ export default function PostCardFeed({
                 <img src={post.media} className="object-cover w-full h-full" alt="Post Media" />
             </figure>
         );
+    };
+
+    const togglePostLike = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            await axios.post(
+                'http://3.110.161.150:4000/api/post/like',
+                { postId: post.id },
+                {
+                    headers: {
+                        'Authorization': token,
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+            setLikedState(prevState => !prevState);
+        } catch (error) {
+            console.log('Error occurred while toggling post like: ', error);
+        }
     };
 
     return (
@@ -87,12 +108,12 @@ export default function PostCardFeed({
                 <section>{renderMedia()}</section>
                 <section className="mt-[20px] mb-[10px] w-full">
                     <div className="flex flex-row gap-6">
-                        <div className="flex flex-col items-center">
+                        <button onClick={togglePostLike} className="flex flex-col items-center">
                             <figure>
                                 <img src={likedState ? '/heart-solid.svg' : '/heart-regular.svg'} width="25px" alt="Heart Icon" />
                             </figure>
                             <figcaption>{post.likes}</figcaption>
-                        </div>
+                        </button>
                         <div className="flex flex-col">
                             <Link href={{ pathname: '/post-card', query: { postId: post.id } }}>
                                 <button>

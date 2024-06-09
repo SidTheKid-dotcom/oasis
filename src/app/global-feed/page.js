@@ -3,11 +3,11 @@ import PopularAccount from "../../components/global-feed/PopularAccounts";
 
 export default function GlobalFeedPage() {
     return (
-        <div className="grid grid-cols-12">
-            <div className="col-span-9 px-20">
+        <div className="grid grid-cols-12 overflow-x-hidden">
+            <div className="col-span-8 px-20 overflow-hidden">
                 <GlobalFeed />
             </div>
-            <div className="col-span-3 hidden md:block top-16 flex-col items-start">
+            <div className="col-span-4 hidden md:block top-16 flex-col items-start overflow-hidden">
                 <PopularAccount />
             </div>
         </div>

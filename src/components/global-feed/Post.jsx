@@ -68,6 +68,7 @@ export default function Posts({ post, muted, setMuted }) {
             <PostCardFeed
                 loadMedia={loadMedia}
                 likedState={likedState}
+                setLikedState={setLikedState}
                 followingState={followingState}
                 post={post}
                 isActive={isActive}

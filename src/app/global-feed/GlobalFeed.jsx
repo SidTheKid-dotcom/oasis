@@ -27,7 +27,7 @@ export default function GlobalFeed() {
     }, []);
 
     return (
-        <div className="w-full flex flex-col items-center">
+        <div className="w-full flex flex-col items-center overflow-hidden">
             {posts.map(post => (
                 <Posts
                     key={post.id}
