@@ -53,7 +53,7 @@ export default function UserPosts({ posts, setConfirmDelete, editable }) {
             </Link>
             }
             {
-                posts.map((post, index) => {
+                posts?.map((post, index) => {
                     const [likedSVG, setLikedSVG] = useState((post.liked) ? true : false);
                     const [imageSrc, setImageSrc] = useState((post.liked) ? '/heart-solid.svg' : '/heart-regular.svg');
 

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { BeatLoader } from "react-spinners";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/authContext";
 
 const BASE_URL = 'http://3.110.161.150:4000';
 
@@ -15,6 +16,7 @@ export default function Form() {
   const [message, setMessage] = useState("");
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
 
   const signIn = async () => {
     try {
@@ -27,8 +29,7 @@ export default function Form() {
       setMessage(data.message);
       setLoading(false);
       if (status === 200 && data.token) {
-        console.log('here')
-        localStorage.setItem('token', 'Bearer ' + data.token);
+        login('Bearer ' + data.token);
         router.push('/');
       }
     } catch (error) {

@@ -29,13 +29,13 @@ export default function FollowersCard({ username, followers, following }) {
           <div className={`flex flex-col text-center ${activeTab == 0 ? 'bg-[#2a313d]' : 'bg-transparent'}`}>
             <button onClick={() => setActiveTab(0)}>
               <h1>followers</h1>
-              <div>{followers.length}</div>
+              <div>{followers?.length}</div>
             </button>
           </div>
           <div className={`flex flex-col text-center ${activeTab == 1 ? 'bg-[#2a313d]' : 'bg-transparent'}`}>
             <button onClick={() => setActiveTab(1)}>
               <h1>Following</h1>
-              <div>{following.length}</div>
+              <div>{following?.length}</div>
             </button>
           </div>
         </section>
@@ -46,11 +46,11 @@ export default function FollowersCard({ username, followers, following }) {
           <div className="overflow-y-auto ">
             {
               activeTab == 0 ? (
-                followers.map((account, index) => (
+                followers?.map((account, index) => (
                   <Follower key={index} account={account} />
                 ))
               ) : (
-                following.map((account, index) => (
+                following?.map((account, index) => (
                   <Following key={index} account={account} />
                 ))
               )

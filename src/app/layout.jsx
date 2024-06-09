@@ -1,5 +1,5 @@
+// app/layout.js or app/layout.jsx
 'use client'
-
 import { useEffect, useState } from "react";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -7,20 +7,26 @@ import Sidebar from "@/components/layout/Sidebar";
 import TopBar from "@/components/layout/TopBar";
 import MobileNav from "@/components/layout/MobileNav";
 import { AppContextProvider } from "@/components/layout/Context";
+import { AuthProvider, useAuth } from "@/context/authContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({ children }) {
-  const [token, setToken] = useState(null);
+  return (
+    <html lang="en">
+      <AppContextProvider>
+        <AuthProvider>
+          <body className={inter.className}>
+            <LayoutContent>{children}</LayoutContent>
+          </body>
+        </AuthProvider>
+      </AppContextProvider>
+    </html>
+  );
+}
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedToken = localStorage.getItem('token');
-      if (storedToken) {
-        setToken(storedToken);
-      }
-    }
-  }, []);
+function LayoutContent({ children }) {
+  const { token } = useAuth();
 
   const renderAuthenticatedLayout = () => (
     <>
@@ -42,19 +48,15 @@ export default function RootLayout({ children }) {
   );
 
   return (
-    <html lang="en">
-      <AppContextProvider>
-      <body className={`${inter.className} ${!token ? 'overflow-hidden' : ''}`}>
-        {token && (
-          <div className="hidden md:block">
-            <div className="fixed top-0 left-0 right-0 bottom-0 bg-black my-10 mx-[8%] opacity-75 z-[-10] rounded-2xl shadow-xl shadow-blue-500"></div>
-          </div>
-        )}
-        <div className="md:my-10 md:mx-[8%] md:p-4 md:flex z-10 min-h-screen">
-          {token ? renderAuthenticatedLayout() : renderUnauthenticatedLayout()}
+    <>
+      {token && (
+        <div className="hidden md:block">
+          <div className="fixed top-0 left-0 right-0 bottom-0 bg-black my-10 mx-[8%] opacity-75 z-[-10] rounded-2xl shadow-xl shadow-blue-500"></div>
         </div>
-      </body>
-      </AppContextProvider>
-    </html>
+      )}
+      <div className="md:my-10 md:mx-[8%] md:p-4 md:flex z-10 min-h-screen">
+        {token ? renderAuthenticatedLayout() : renderUnauthenticatedLayout()}
+      </div>
+    </>
   );
 }

@@ -1,23 +1,22 @@
 'use client'
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import GlobalFeedPage from "./global-feed/page";
+import { useAuth } from "@/context/authContext";
+
 export default function Home() {
-  const token = localStorage.getItem('token');
+  const { token } = useAuth();
   const router = useRouter();
+
   useEffect(() => {
-    const timer = setTimeout(() => {
-      router.refresh();
-    }, 2)
-    return () => {
-      clearTimeout(timer)
+    if (!token) {
+      router.push('/auth');
     }
-  }, [])
+  }, [token, router]);
+
   return (
-    <>
-      <div>
-        {token ? <GlobalFeedPage /> : router.push('/auth')}
-      </div>
-    </>
+    <div>
+      {token ? <GlobalFeedPage /> : null}
+    </div>
   );
 }
