@@ -88,7 +88,6 @@ export default function ReplyCommentBox({ parent_id, comments, setComments }) {
     };
 
     const handleGifClick = (gif) => {
-        console.log(gif.url);
         setGifURL(gif.url);
         setComment('');
     }

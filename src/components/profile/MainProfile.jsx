@@ -15,6 +15,9 @@ import axios from "axios"
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 
+import { Toaster } from "sonner"
+import { toast } from "sonner"
+
 const { useAuth } = require("@/context/authContext");
 import { Context } from "../layout/Context";
 
@@ -67,6 +70,10 @@ export default function MainProfile({ userInfo, setUserInfo, loading }) {
                     amfollowing: !prevState.amfollowing,
                     followers: [...prevState.followers, response.data.self]
                 }));
+                toast('User followed successfully', {
+                    position: 'top-right',
+                    className: 'bg-black text-white pixel-text border border-solid border-green-400',
+                })
             }
             else {
                 await axios.delete('http://3.110.161.150:4000/api/user/unfollow',
@@ -85,6 +92,10 @@ export default function MainProfile({ userInfo, setUserInfo, loading }) {
                     amfollowing: !prevState.amfollowing,
                     followers: userInfo.followers.filter(follower => follower.id !== navBarData.id)
                 }));
+                toast('User Unfollowed successfully', {
+                    position: 'top-right',
+                    className: 'bg-black text-white pixel-text border border-solid border-red-500',
+                })
             }
         }
         catch (error) {
@@ -98,7 +109,7 @@ export default function MainProfile({ userInfo, setUserInfo, loading }) {
 
     return (
         <div className="px-5 flex flex-col min-h-[100vh] h-full text-white bg-black pixel-text">
-
+            <Toaster />
             {/* Overlay to disable other components when Links is active */}
             {
                 showLinks && (

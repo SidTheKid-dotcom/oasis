@@ -71,6 +71,10 @@ export default function PostCardFeed({
                 }
             )
             setFollowingState(prevState => !prevState)
+            toast('User Followed Successfully', {
+                position: 'top-right',
+                className: 'bg-black text-white pixel-text border border-solid border-green-400',
+            })
         }
         catch (error) {
             console.error('Error occired while following user ', error)
@@ -115,7 +119,6 @@ export default function PostCardFeed({
                     className: 'bg-black text-white pixel-text border border-solid border-red-500',
                 });
                 setLikes(prevLikes => prevLikes - 1);
-                console.log('here')
                 setLikedState(false);
             }
         } catch (error) {

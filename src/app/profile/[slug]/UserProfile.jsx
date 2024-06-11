@@ -23,7 +23,6 @@ export default function UserProfile({ params }) {
               'Content-Type': 'application/json',
             },
           });
-          console.log(response.data);
           setUserInfo(response.data);
         } catch (error) {
           console.log("error occurred while fetching user's info: ", error);

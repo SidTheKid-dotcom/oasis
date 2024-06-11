@@ -1,15 +1,53 @@
 import React from "react";
 import ReactPlayer from "react-player";
+import axios from "axios";
 
-const PostCard = React.memo(({ post }) => {
+import { useSearchParams } from "next/navigation";
+import { useAuth } from "@/context/authContext";
+
+import { Toaster } from "sonner";
+import { toast } from "sonner";
+
+const PostCard = React.memo(({ post, setPost, totalComments }) => {
+
+    const { token } = useAuth();
+    const searchParams = useSearchParams();
+    const postId = searchParams.get('postId');
+
+    console.log(post);
+
+    const toggleFollowUser = async () => {
+        try {
+            await axios.post('http://3.110.161.150:4000/api/user/follow',
+                { userId: post.user.id },
+                {
+                    headers: {
+                        'Authorization': token,
+                        'Content-Type': 'application/json',
+                    },
+                }
+            )
+            setPost(prevPost => ({
+                ...prevPost,
+                isFollowing: true,
+            }));
+            toast('User Followed Successfully', {
+                position: 'top-right',
+                className: 'bg-black text-white pixel-text border border-solid border-green-400',
+            })
+        }
+        catch (error) {
+            console.error('Error occired while following user ', error)
+        }
+    }
 
     const togglePostLike = async () => {
 
         try {
-            if (!likedState) {
+            if (!post.isLiked) {
                 await axios.post(
                     'http://3.110.161.150:4000/api/post/like',
-                    { postId: post.id },
+                    { postId: parseInt(postId) },
                     {
                         headers: {
                             'Authorization': token,
@@ -17,11 +55,15 @@ const PostCard = React.memo(({ post }) => {
                         },
                     }
                 );
+                setPost(prevPost => ({
+                    ...prevPost,
+                    no_of_likes: prevPost.no_of_likes + 1,
+                    isLiked: true, // Correcting the state update
+                }));
                 toast('Post Liked Successfully', {
                     position: 'top-right',
                     className: 'bg-black text-white pixel-text border border-solid border-green-400',
                 });
-                setLikes(prevLikes => prevLikes + 1);
             } else {
                 await axios.delete(
                     'http://3.110.161.150:4000/api/post/unlike',
@@ -31,17 +73,20 @@ const PostCard = React.memo(({ post }) => {
                             'Content-Type': 'application/json',
                         },
                         data: {
-                            postId: post.id
+                            postId: parseInt(postId)
                         },
                     }
                 );
+                setPost(prevPost => ({
+                    ...prevPost,
+                    no_of_likes: prevPost.no_of_likes - 1,
+                    isLiked: false, // Correcting the state update
+                }));
                 toast('Post Unliked Successfully', {
                     position: 'top-right',
                     className: 'bg-black text-white pixel-text border border-solid border-red-500',
                 });
-                setLikes(prevLikes => prevLikes - 1);
             }
-            setLikedState(prevState => !prevState);
         } catch (error) {
             console.log('Error occurred while toggling post like: ', error);
         }
@@ -49,6 +94,7 @@ const PostCard = React.memo(({ post }) => {
 
     return (
         <div>
+            <Toaster />
             <div className="my-[1rem] px-[2rem] text-white flex flex-col w-full min-h-[100px] rounded-[15px] bg-black pixel-text">
                 <section>
                     <div className="mt-[1rem] grid grid-cols-12 items-center">
@@ -70,7 +116,7 @@ const PostCard = React.memo(({ post }) => {
                         <div className="col-span-3 flex flex-col items-center text-[1rem]">
                             {
                                 !post.isFollowing && (
-                                    <button className="m-2 p-2 px-3 min-w-[75px] bg-blue-500 rounded-[5px]">Follow</button>
+                                    <button onClick={toggleFollowUser} className="m-2 p-2 px-3 min-w-[75px] bg-blue-500 rounded-[5px]">Follow</button>
                                 )
                             }
                         </div>
@@ -119,19 +165,17 @@ const PostCard = React.memo(({ post }) => {
                 </section>
                 <section className="mt-[20px] mb-[10px] w-full">
                     <div className="flex flex-row gap-6">
-                        <div onClick={togglePostLike} className="flex flex-col items-center">
+                        <button onClick={togglePostLike} className="flex flex-col items-center">
                             <figure>
                                 <img src={post.isLiked ? '/heart-solid.svg' : '/heart-regular.svg'} width="25px"></img>
                             </figure>
                             <figcaption>{post.no_of_likes}</figcaption>
-                        </div>
+                        </button>
                         <div className="flex flex-col">
-                            <button>
-                                <figure>
-                                    <img src='/comment-regular.svg' width="25px"></img>
-                                </figure>
-                                <figcaption>{post.comments.length}</figcaption>
-                            </button>
+                            <figure>
+                                <img src='/comment-regular.svg' width="25px"></img>
+                            </figure>
+                            <figcaption>{totalComments}</figcaption>
                         </div>
                     </div>
                 </section>
