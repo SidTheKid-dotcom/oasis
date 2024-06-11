@@ -2,6 +2,51 @@ import React from "react";
 import ReactPlayer from "react-player";
 
 const PostCard = React.memo(({ post }) => {
+
+    const togglePostLike = async () => {
+
+        try {
+            if (!likedState) {
+                await axios.post(
+                    'http://3.110.161.150:4000/api/post/like',
+                    { postId: post.id },
+                    {
+                        headers: {
+                            'Authorization': token,
+                            'Content-Type': 'application/json',
+                        },
+                    }
+                );
+                toast('Post Liked Successfully', {
+                    position: 'top-right',
+                    className: 'bg-black text-white pixel-text border border-solid border-green-400',
+                });
+                setLikes(prevLikes => prevLikes + 1);
+            } else {
+                await axios.delete(
+                    'http://3.110.161.150:4000/api/post/unlike',
+                    {
+                        headers: {
+                            'Authorization': token,
+                            'Content-Type': 'application/json',
+                        },
+                        data: {
+                            postId: post.id
+                        },
+                    }
+                );
+                toast('Post Unliked Successfully', {
+                    position: 'top-right',
+                    className: 'bg-black text-white pixel-text border border-solid border-red-500',
+                });
+                setLikes(prevLikes => prevLikes - 1);
+            }
+            setLikedState(prevState => !prevState);
+        } catch (error) {
+            console.log('Error occurred while toggling post like: ', error);
+        }
+    };
+
     return (
         <div>
             <div className="my-[1rem] px-[2rem] text-white flex flex-col w-full min-h-[100px] rounded-[15px] bg-black pixel-text">
@@ -74,7 +119,7 @@ const PostCard = React.memo(({ post }) => {
                 </section>
                 <section className="mt-[20px] mb-[10px] w-full">
                     <div className="flex flex-row gap-6">
-                        <div className="flex flex-col items-center">
+                        <div onClick={togglePostLike} className="flex flex-col items-center">
                             <figure>
                                 <img src={post.isLiked ? '/heart-solid.svg' : '/heart-regular.svg'} width="25px"></img>
                             </figure>

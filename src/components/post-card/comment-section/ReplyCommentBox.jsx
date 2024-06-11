@@ -4,6 +4,8 @@ import axios from "axios";
 import EmojiPicker from 'emoji-picker-react';
 import GifPicker from "gif-picker-react";
 
+import { toast } from "sonner";
+
 export default function ReplyCommentBox({ parent_id, comments, setComments }) {
 
     const [comment, setComment] = useState('');
@@ -51,6 +53,10 @@ export default function ReplyCommentBox({ parent_id, comments, setComments }) {
 
                 setComment('');
                 setGifURL(null);
+                toast('Comment Posted Successfully', {
+                    position: 'top-right',
+                    className: 'bg-black text-white pixel-text border border-solid border-green-400',
+                })
             }
         }
         catch (error) {

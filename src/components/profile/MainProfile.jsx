@@ -53,7 +53,7 @@ export default function MainProfile({ userInfo, setUserInfo, loading }) {
     const toggleFollowUser = async () => {
         try {
             if (!userInfo.amfollowing) {
-                await axios.post('http://3.110.161.150:4000/api/user/follow',
+                const response = await axios.post('http://3.110.161.150:4000/api/user/follow',
                     { userId: userInfo.id },
                     {
                         headers: {
@@ -65,6 +65,7 @@ export default function MainProfile({ userInfo, setUserInfo, loading }) {
                 setUserInfo(prevState => ({
                     ...prevState,
                     amfollowing: !prevState.amfollowing,
+                    followers: [...prevState.followers, response.data.self]
                 }));
             }
             else {

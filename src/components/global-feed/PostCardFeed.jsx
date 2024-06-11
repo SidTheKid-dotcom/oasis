@@ -4,6 +4,8 @@ import Link from 'next/link';
 import axios from "axios";
 import { useAuth } from "@/context/authContext";
 import { Context } from "../layout/Context";
+import { Toaster } from 'sonner';
+import { toast } from 'sonner';
 
 export default function PostCardFeed({
     loadMedia,
@@ -11,6 +13,9 @@ export default function PostCardFeed({
     setLikedState,
     followingState,
     setFollowingState,
+    likes,
+    setLikes,
+    comments,
     post,
     isActive,
     muted,
@@ -20,7 +25,6 @@ export default function PostCardFeed({
 
     const { token } = useAuth();
     const { navBarData } = useContext(Context);
-    const [likes, setLikes] = useState(post.likes);
 
     const toggleMute = () => setMuted(prevMuted => !prevMuted);
 
@@ -87,7 +91,12 @@ export default function PostCardFeed({
                         },
                     }
                 );
+                toast('Post Liked Successfully', {
+                    position: 'top-right',
+                    className: 'bg-black text-white pixel-text border border-solid border-green-400',
+                });
                 setLikes(prevLikes => prevLikes + 1);
+                setLikedState(true);
             } else {
                 await axios.delete(
                     'http://3.110.161.150:4000/api/post/unlike',
@@ -101,16 +110,23 @@ export default function PostCardFeed({
                         },
                     }
                 );
+                toast('Post Unliked Successfully', {
+                    position: 'top-right',
+                    className: 'bg-black text-white pixel-text border border-solid border-red-500',
+                });
                 setLikes(prevLikes => prevLikes - 1);
+                console.log('here')
+                setLikedState(false);
             }
-            setLikedState(prevState => !prevState);
         } catch (error) {
             console.log('Error occurred while toggling post like: ', error);
         }
     };
 
     return (
+
         <div className="lazy-post-card w-full pixel-text">
+            <Toaster />
             <div className="py-[1rem] px-[2rem] text-white flex flex-col min-h-[100px] border-y border-blue-500">
                 <section>
                     <div className="mt-[1rem] grid grid-cols-12 items-center">
@@ -168,7 +184,7 @@ export default function PostCardFeed({
                                     <figure>
                                         <img src="/comment-regular.svg" width="25px" alt="Comment Icon" />
                                     </figure>
-                                    <figcaption>{post.comments}</figcaption>
+                                    <figcaption>{comments}</figcaption>
                                 </button>
                             </Link>
                         </div>
