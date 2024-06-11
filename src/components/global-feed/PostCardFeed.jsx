@@ -1,18 +1,27 @@
+import { useState, useContext } from 'react';
 import ReactPlayer from 'react-player';
 import Link from 'next/link';
 import axios from "axios";
+import { useAuth } from "@/context/authContext";
+import { Context } from "../layout/Context";
 
 export default function PostCardFeed({
     loadMedia,
     likedState,
     setLikedState,
     followingState,
+    setFollowingState,
     post,
     isActive,
     muted,
     setMuted,
     playerRef,
 }) {
+
+    const { token } = useAuth();
+    const { navBarData } = useContext(Context);
+    const [likes, setLikes] = useState(post.likes);
+
     const toggleMute = () => setMuted(prevMuted => !prevMuted);
 
     const renderMedia = () => {
@@ -46,19 +55,54 @@ export default function PostCardFeed({
         );
     };
 
-    const togglePostLike = async () => {
+    const toggleFollowUser = async () => {
         try {
-            const token = localStorage.getItem('token');
-            await axios.post(
-                'http://3.110.161.150:4000/api/post/like',
-                { postId: post.id },
+            await axios.post('http://3.110.161.150:4000/api/user/follow',
+                { userId: post.user.id },
                 {
                     headers: {
                         'Authorization': token,
                         'Content-Type': 'application/json',
                     },
                 }
-            );
+            )
+            setFollowingState(prevState => !prevState)
+        }
+        catch (error) {
+            console.error('Error occired while following user ', error)
+        }
+    }
+
+    const togglePostLike = async () => {
+
+        try {
+            if (!likedState) {
+                await axios.post(
+                    'http://3.110.161.150:4000/api/post/like',
+                    { postId: post.id },
+                    {
+                        headers: {
+                            'Authorization': token,
+                            'Content-Type': 'application/json',
+                        },
+                    }
+                );
+                setLikes(prevLikes => prevLikes + 1);
+            } else {
+                await axios.delete(
+                    'http://3.110.161.150:4000/api/post/unlike',
+                    {
+                        headers: {
+                            'Authorization': token,
+                            'Content-Type': 'application/json',
+                        },
+                        data: {
+                            postId: post.id
+                        },
+                    }
+                );
+                setLikes(prevLikes => prevLikes - 1);
+            }
             setLikedState(prevState => !prevState);
         } catch (error) {
             console.log('Error occurred while toggling post like: ', error);
@@ -80,14 +124,18 @@ export default function PostCardFeed({
                             </figure>
                         </div>
                         <div className="col-span-6 text-md flex flex-col justify-center">
-                            <div className="font-bold">{post.user.username}</div>
-                            <div className="text-sm">
-                                <i>@{post.community.name}</i>
-                            </div>
+                            <Link href={`/profile/${post.user.id}`}>
+                                <div className="font-bold">{post.user.username}</div>
+                            </Link>
+                            <Link href={`/community/${post.community.id}`}>
+                                <div className="text-sm">
+                                    <i>@{post.community.name}</i>
+                                </div>
+                            </Link>
                         </div>
                         <div className="col-span-3 flex flex-col items-center text-[1rem]">
-                            {!followingState && (
-                                <button className="m-2 p-2 px-3 min-w-[75px] bg-blue-500 rounded-[5px]">
+                            {!followingState && post.user.id !== navBarData.id && (
+                                <button onClick={toggleFollowUser} className="m-2 p-2 px-3 min-w-[75px] bg-blue-500 rounded-[5px]">
                                     Follow
                                 </button>
                             )}
@@ -112,7 +160,7 @@ export default function PostCardFeed({
                             <figure>
                                 <img src={likedState ? '/heart-solid.svg' : '/heart-regular.svg'} width="25px" alt="Heart Icon" />
                             </figure>
-                            <figcaption>{post.likes}</figcaption>
+                            <figcaption>{likes}</figcaption>
                         </button>
                         <div className="flex flex-col">
                             <Link href={{ pathname: '/post-card', query: { postId: post.id } }}>

@@ -4,11 +4,14 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from "next/navigation";
 import axios from 'axios';
 
+const { useAuth } = require("@/context/authContext");
+
 const PeopleYouMightKnow = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  
+
+  const { token } = useAuth();
 
   useEffect(() => {
     const fetchSuggestions = async () => {
@@ -20,6 +23,7 @@ const PeopleYouMightKnow = () => {
             'Content-Type': 'application/json',
           },
         });
+        console.log('suggesstions ', response.data);
         setSuggestions(response.data);
         setLoading(false);
       } catch (error) {
@@ -36,21 +40,30 @@ const PeopleYouMightKnow = () => {
     router.push('/profile/' + userId);
   };
 
-  const handleAddFriend = (userId) => {
-    // Handle the logic for adding a friend here
-    console.log(`Add friend: ${userId}`);
+  const handleFollowUser = async (userId) => {
+
+    await axios.post('http://3.110.161.150:4000/api/user/follow',
+      { userId: userId },
+      {
+        headers: {
+          'Authorization': token,
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+    setSuggestions(prevSuggestions => prevSuggestions.filter(suggestion => suggestion.id !== userId));
   };
 
   return (
-    <button className="bg-black text-white rounded-[30px] p-5 pixel-text mx-3 my-10">
+    <div className="bg-black text-white rounded-[30px] p-5 pixel-text mx-3 my-10">
       <h2 className="text-2md font-bold mb-5">People You Might Know</h2>
       {loading ? (
         <p>Loading...</p>
       ) : (
         <div className="flex flex-col gap-4 text-sm">
           {suggestions.map((user) => (
-            <div key={user.id} onClick={() =>navigateUserProfile(user.id)} className="grid grid-cols-12 p-3 border border-slate-500 rounded-lg">
-              <div className="col-span-9 gap-4 flex flex-row">
+            <div key={user.id} className="grid grid-cols-12 p-3 border border-slate-500 rounded-lg">
+              <button onClick={() => navigateUserProfile(user.id)} className="col-span-9 gap-4 flex flex-row">
                 <figure className="w-[30px] h-[30px] overflow-hidden rounded-full border border-white">
                   <img src={user.profile_picture || '/default-profile.png'} alt={user.username} className="w-full h-full object-cover" />
                 </figure>
@@ -58,9 +71,9 @@ const PeopleYouMightKnow = () => {
                   <div className="font-bold">{user.username}</div>
                   <div className="text-sm text-slate-400">u/{user.username}</div>
                 </div>
-              </div>
+              </button>
               <button
-                onClick={() => handleAddFriend(user.id)}
+                onClick={() => handleFollowUser(user.id)}
                 className="text-sm col-span-3 border border-solid border-slate-100 rounded-xl bg-[#323741] hover:bg-blue-500 transition-colors"
               >
                 Add
@@ -69,7 +82,7 @@ const PeopleYouMightKnow = () => {
           ))}
         </div>
       )}
-    </button>
+    </div>
   );
 };
 

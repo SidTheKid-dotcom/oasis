@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import PostCardFeed from './PostCardFeed';
 
-export default function Posts({ post, muted, setMuted }) {
+export default function Posts({ post, muted, setMuted, onClick }) {
     const [likedState, setLikedState] = useState(null);
     const [followingState, setFollowingState] = useState(null);
     const postRef = useRef(null);
@@ -64,12 +64,13 @@ export default function Posts({ post, muted, setMuted }) {
     }, [isActive]);
 
     return (
-        <div ref={postRef} className="w-full bg-black">
+        <div ref={postRef} className="w-full bg-black" onClick={onClick}>
             <PostCardFeed
                 loadMedia={loadMedia}
                 likedState={likedState}
                 setLikedState={setLikedState}
                 followingState={followingState}
+                setFollowingState={setFollowingState}
                 post={post}
                 isActive={isActive}
                 muted={muted}

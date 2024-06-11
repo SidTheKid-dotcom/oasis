@@ -9,14 +9,19 @@ import Links from "./prompts/Links"
 
 import ConfirmDelete from "./prompts/ConfirmDelete"
 
-import { useState } from "react"
+import { useState, useContext } from "react"
+import axios from "axios"
 
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 
+const { useAuth } = require("@/context/authContext");
+import { Context } from "../layout/Context";
+
 export default function MainProfile({ userInfo, setUserInfo, loading }) {
 
-
+    const { token } = useAuth();
+    const { navBarData } = useContext(Context);
     const [activeIndex, setActiveIndex] = useState(0);
 
     const [showLinks, setShowLinks] = useState(false);
@@ -43,6 +48,47 @@ export default function MainProfile({ userInfo, setUserInfo, loading }) {
         default:
             ConditionalComponent = null;
         // Render nothing if activeIndex is not 1, 2, or 3
+    }
+
+    const toggleFollowUser = async () => {
+        try {
+            if (!userInfo.amfollowing) {
+                await axios.post('http://3.110.161.150:4000/api/user/follow',
+                    { userId: userInfo.id },
+                    {
+                        headers: {
+                            'Authorization': token,
+                            'Content-Type': 'application/json',
+                        },
+                    }
+                )
+                setUserInfo(prevState => ({
+                    ...prevState,
+                    amfollowing: !prevState.amfollowing,
+                }));
+            }
+            else {
+                await axios.delete('http://3.110.161.150:4000/api/user/unfollow',
+                    {
+                        headers: {
+                            'Authorization': token,
+                            'Content-Type': 'application/json',
+                        },
+                        data: {
+                            userId: userInfo.id
+                        }
+                    }
+                )
+                setUserInfo(prevState => ({
+                    ...prevState,
+                    amfollowing: !prevState.amfollowing,
+                    followers: userInfo.followers.filter(follower => follower.id !== navBarData.id)
+                }));
+            }
+        }
+        catch (error) {
+            console.error('Error occured while following user ', error)
+        }
     }
 
     const handleShowLinks = () => {
@@ -86,10 +132,24 @@ export default function MainProfile({ userInfo, setUserInfo, loading }) {
                         </div>
                     </div>
                     {
-                        userInfo.editable && (
+                        userInfo.editable ? (
                             <div className="col-span-3 flex flex-col justify-center items-center">
                                 <button className="m-2 px-4 py-2 border border-solid border-slate-100 rounded-xl bg-[#323741]">Edit Profile</button>
                             </div>
+                        ) : (
+                            userInfo.amfollowing ? (
+                                <div className="col-span-3 flex flex-col justify-center items-center text-[1rem]">
+                                    <button onClick={toggleFollowUser} className="m-2 p-2 px-3 min-w-[75px] bg-blue-500 rounded-[5px]">
+                                        Unfollow
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="col-span-3 flex flex-col justify-center items-center text-[1rem]">
+                                    <button onClick={toggleFollowUser} className="m-2 p-2 px-3 min-w-[75px] bg-blue-500 rounded-[5px]">
+                                        Follow
+                                    </button>
+                                </div>
+                            )
                         )
                     }
                 </div>

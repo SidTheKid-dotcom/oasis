@@ -67,8 +67,8 @@ export default function FollowersCard({ username, followers, following }) {
 const Follower = ({ account }) => {
   return (
     <button className="p-2 flex flex-row gap-4">
-      <div className="ml-2 border border-white h-[40px] w-[40px] rounded-full"><img src='/image.png'></img></div>
-      <div className="flex flex-col justify-center text-lg" style={{ marginTop: '4px' }}>{account.follower_name}</div>
+      <div className="ml-2 border border-white h-[40px] w-[40px] rounded-full"><img src={account.profile_picture}></img></div>
+      <div className="flex flex-col justify-center text-lg" style={{ marginTop: '4px' }}>{account.username}</div>
     </button>
   )
 }
