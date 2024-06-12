@@ -30,6 +30,7 @@ export default function PostCardFeed({
                         ref={playerRef}
                         controls
                         url={post.media}
+                        /**we nned to change this hieght and width*/
                         width="100%"
                         height="100%"
                         muted={muted}

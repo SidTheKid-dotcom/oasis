@@ -7,6 +7,7 @@ import { SlCalender } from "react-icons/sl";
 import { BsFire } from "react-icons/bs";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { usePathname } from "next/navigation";
+import PopularAccouts from "../global-feed/PopularAccounts";
 import Link from "next/link";
 export default function MobileNav() {
   const pathname = usePathname();
@@ -102,6 +103,7 @@ export default function MobileNav() {
                       Top Communities{" "}
                     </p>
                   </div>
+                  <PopularAccouts/>
                 </div>
               </div>
             </div>
