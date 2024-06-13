@@ -2,12 +2,8 @@ import ViewPost from "./ViewPost";
 
 export default function ViewPostPage() {
     return (
-        <div className="grid grid-cols-12">
-            <div className="col-span-3"></div>
-            <div className="col-span-6">
+        <div class="px-[8rem]">
                 <ViewPost />
-            </div>
-            <div className="col-span-3"></div>
         </div>
     )
 }

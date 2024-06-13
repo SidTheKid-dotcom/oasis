@@ -4,8 +4,7 @@ import Link from 'next/link';
 import axios from "axios";
 import { useAuth } from "@/context/authContext";
 import { Context } from "../layout/Context";
-import { Toaster } from 'sonner';
-import { toast } from 'sonner';
+import { Toaster, toast } from 'sonner';
 
 export default function PostCardFeed({
     loadMedia,
@@ -22,7 +21,6 @@ export default function PostCardFeed({
     setMuted,
     playerRef,
 }) {
-
     const { token } = useAuth();
     const { navBarData } = useContext(Context);
 
@@ -39,23 +37,29 @@ export default function PostCardFeed({
                             {muted ? 'Unmute' : 'Mute'}
                         </button>
                     </div>
-                    <ReactPlayer
-                        ref={playerRef}
-                        controls
-                        url={post.media}
-                        width="100%"
-                        height="100%"
-                        muted={muted}
-                        playing={isActive}
-                    />
+                    <div className="relative flex justify-center items-center bg-black h-0 pb-[56.25%]">
+                        <ReactPlayer
+                            id="post-video-player"
+                            className="absolute top-0 left-0 w-full h-full"
+                            controls
+                            url={post.media}
+                            muted={muted}
+                            playing={isActive}
+                            width="100%"
+                            height="100%"
+                            ref={playerRef}
+                        />
+                    </div>
                 </div>
             );
         }
 
         return (
-            <figure className="w-full h-full">
-                <img src={post.media} className="object-cover w-full h-full" alt="Post Media" />
-            </figure>
+            <div className="relative flex justify-center items-center bg-black h-0 pb-[56.25%]">
+                <figure className="absolute top-0 left-0 w-full h-full flex justify-center items-center">
+                    <img src={post.media} className="object-contain max-w-full max-h-full" alt="Post Media" />
+                </figure>
+            </div>
         );
     };
 
@@ -69,20 +73,18 @@ export default function PostCardFeed({
                         'Content-Type': 'application/json',
                     },
                 }
-            )
-            setFollowingState(prevState => !prevState)
+            );
+            setFollowingState(prevState => !prevState);
             toast('User Followed Successfully', {
                 position: 'top-right',
                 className: 'bg-black text-white pixel-text border border-solid border-green-400',
-            })
+            });
+        } catch (error) {
+            console.error('Error occurred while following user ', error);
         }
-        catch (error) {
-            console.error('Error occired while following user ', error)
-        }
-    }
+    };
 
     const togglePostLike = async () => {
-
         try {
             if (!likedState) {
                 await axios.post(
@@ -127,7 +129,6 @@ export default function PostCardFeed({
     };
 
     return (
-
         <div className="lazy-post-card w-full pixel-text">
             <Toaster />
             <div className="py-[1rem] px-[2rem] text-white flex flex-col min-h-[100px] border-y border-blue-500">
@@ -160,17 +161,25 @@ export default function PostCardFeed({
                             )}
                         </div>
                         <div className="col-span-1 flex flex-row justify-end">
-                            <button>
-                                <figure>
-                                    <img src="/ellipsis-vertical-solid.svg" width="7px" height="12px" alt="Ellipsis Icon" />
-                                </figure>
-                            </button>
                         </div>
                     </div>
                 </section>
                 <section className="my-[10px]">
                     <div className="text-[0.75rem]">{post.title}</div>
-                    <div className="text-[0.75rem]">{post.body}</div>
+                    <div className="text-[0.75rem]">
+                        {post.body.length > 200 ? (
+                            <>
+                                {post.body.slice(0, 200)}...
+                                <Link href={`/post-card?postId=${post.id}`}>
+                                    <button className="text-blue-500 underline">
+                                        Read More
+                                    </button>
+                                </Link>
+                            </>
+                        ) : (
+                            post.body
+                        )}
+                    </div>
                 </section>
                 <section>{renderMedia()}</section>
                 <section className="mt-[20px] mb-[10px] w-full">
