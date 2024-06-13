@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import ReactPlayer from "react-player";
 import axios from "axios";
 
 import { useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/authContext";
+import { Context } from "../layout/Context";
 
 import { Toaster } from "sonner";
 import { toast } from "sonner";
@@ -13,8 +14,7 @@ const PostCard = React.memo(({ post, setPost, totalComments }) => {
     const { token } = useAuth();
     const searchParams = useSearchParams();
     const postId = searchParams.get('postId');
-
-    console.log(post);
+    const { navBarData } = useContext(Context);
 
     const toggleFollowUser = async () => {
         try {
@@ -95,7 +95,7 @@ const PostCard = React.memo(({ post, setPost, totalComments }) => {
     return (
         <div>
             <Toaster />
-            <div className="my-[1rem] px-[2rem] text-white flex flex-col w-full min-h-[100px] rounded-[15px] bg-black pixel-text">
+            <div className="px-[2rem] text-white flex flex-col w-full min-h-[100px] bg-black pixel-text">
                 <section>
                     <div className="mt-[1rem] grid grid-cols-12 items-center">
                         <div className="col-span-2 rounded-full overflow-hidden w-[50px] h-[50px] border border-solid border-white">
@@ -114,18 +114,13 @@ const PostCard = React.memo(({ post, setPost, totalComments }) => {
                             <div className="text-sm"><i>@{post.community.name}</i></div>
                         </div>
                         <div className="col-span-3 flex flex-col items-center text-[1rem]">
-                            {
-                                !post.isFollowing && (
-                                    <button onClick={toggleFollowUser} className="m-2 p-2 px-3 min-w-[75px] bg-blue-500 rounded-[5px]">Follow</button>
-                                )
-                            }
+                            {!post.isFollowing && post.user.id !== navBarData.id && (
+                                <button onClick={toggleFollowUser} className="m-2 p-2 px-3 min-w-[75px] bg-blue-500 rounded-[5px]">
+                                    Follow
+                                </button>
+                            )}
                         </div>
                         <div className="col-span-1 flex flex-row justify-end">
-                            <button>
-                                <figure>
-                                    <img src='/ellipsis-vertical-solid.svg' width="7px" height="12px"></img>
-                                </figure>
-                            </button>
                         </div>
                     </div>
                 </section>
@@ -139,21 +134,25 @@ const PostCard = React.memo(({ post, setPost, totalComments }) => {
                             <div className="rounded-[10px] w-full min-h-[50px] overflow-hidden">
                                 {
                                     post.media_type === 'video' ? (
-                                        <div>
-                                            <ReactPlayer id="post-video-player"
+                                        <div className="relative flex justify-center items-center bg-black h-0 pb-[56.25%]">
+                                            <ReactPlayer
+                                                id="post-video-player"
+                                                className="absolute top-0 left-0 w-full h-full"
                                                 controls
                                                 url={post.media}
-                                                width="100%"
-                                                height="100%"
                                                 muted={true}
                                                 playing={true}
+                                                width="100%"
+                                                height="100%"
                                             />
                                         </div>
                                     )
                                         : (
-                                            <figure className="w-full h-full">
-                                                <img src={post.media} className="object-cover" width="100%" height="100%"></img>
-                                            </figure>
+                                            <div className="relative flex justify-center items-center bg-black h-0 pb-[56.25%]">
+                                                <figure className="absolute top-0 left-0 w-full h-full flex justify-center items-center">
+                                                    <img src={post.media} className="object-contain max-w-full max-h-full" alt="Post Media" />
+                                                </figure>
+                                            </div>
                                         )
                                 }
                             </div>
