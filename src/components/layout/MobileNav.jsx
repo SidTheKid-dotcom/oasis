@@ -8,13 +8,23 @@ import { BsFire } from "react-icons/bs";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { usePathname } from "next/navigation";
 import PopularAccouts from "../global-feed/PopularAccounts";
+import Profile from "./profile";
+import UserSearchBox from "../search/user/UserSearchBox";
+import { MdOutlineSearch } from "react-icons/md";
 import Link from "next/link";
 export default function MobileNav() {
   const pathname = usePathname();
+  const [renderSearchBox,setRenderSearchBox]=useState(false);
   const [active, setActive] = useState(false);
   const handleClick = () => {
     setActive(!active);
   };
+  const handleSearchClick = () => {
+    setRenderSearchBox(!renderSearchBox);
+  }
+  const handleBlur = () => {
+    setRenderSearchBox(false);
+  }
   return (
     <>
       <div className="  sticky top-0  z-50 md:hidden ">
@@ -30,17 +40,24 @@ export default function MobileNav() {
                     onClick={handleClick}
                   />
                 )}
-
-                <p className=" text-white border p-1 px-4  text-xl rounded-3xl my-auto   pixel-text ml-2 ">
-                  Oasis
-                </p>
+                {!renderSearchBox && (
+                  <p className=" text-white border p-1 px-4  text-xl rounded-3xl my-auto   pixel-text ml-2 ">
+                    Oasis
+                  </p>
+                )}
+                {renderSearchBox ? (
+                  <UserSearchBox onBlur={handleBlur} />
+                ) : (
+                  <button onClick={handleSearchClick}>
+                    <MdOutlineSearch
+                      size={35}
+                      color="white"
+                      className="my-auto ml-2"
+                    />
+                  </button>
+                )}
               </div>
-
-              <img
-                src="profile.png"
-                alt=""
-                className=" w-12 my-auto  bg-black rounded-full"
-              />
+              <Profile/>
             </div>
           </div>
         </div>

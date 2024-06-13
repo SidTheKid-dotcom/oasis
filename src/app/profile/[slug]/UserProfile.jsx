@@ -23,7 +23,6 @@ export default function UserProfile({ params }) {
               'Content-Type': 'application/json',
             },
           });
-          console.log(response.data);
           setUserInfo(response.data);
         } catch (error) {
           console.log("error occurred while fetching user's info: ", error);
@@ -38,14 +37,14 @@ export default function UserProfile({ params }) {
 
   return (
     <div className="grid grid-cols-12 mt-[2rem]">
-      <div className="col-span-8">
+      <div className="col-span-12 lg:col-span-8">
         {loading ? (
           <MainProfileSkeleton />
         ) : (
           <MainProfile userInfo={userInfo} setUserInfo={setUserInfo} loading={loading} />
         )}
       </div>
-      <div className="col-span-4">
+      <div className="hidden lg:block lg:col-span-4">
         {loading ? (
           <FollowersCardSkeleton />
         ) : (

@@ -2,9 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import PostCardFeed from './PostCardFeed';
 
-export default function Posts({ post, muted, setMuted }) {
+export default function Posts({ post, muted, setMuted, onClick }) {
     const [likedState, setLikedState] = useState(null);
     const [followingState, setFollowingState] = useState(null);
+    const [likes, setLikes] = useState(0);
+    const [comments, setComments] = useState(0);
+    
     const postRef = useRef(null);
     const playerRef = useRef(null);
     const [loadMedia, setLoadMedia] = useState(false);
@@ -19,6 +22,8 @@ export default function Posts({ post, muted, setMuted }) {
                     'Content-Type': 'application/json',
                 },
             });
+            setLikes(response.data.likes);
+            setComments(response.data.comments);
             setLikedState(response.data.isLiked);
             setFollowingState(response.data.isFollowing);
         } catch (error) {
@@ -64,12 +69,16 @@ export default function Posts({ post, muted, setMuted }) {
     }, [isActive]);
 
     return (
-        <div ref={postRef} className="w-full bg-black">
+        <div ref={postRef} className="w-full bg-black" onClick={onClick}>
             <PostCardFeed
                 loadMedia={loadMedia}
                 likedState={likedState}
                 setLikedState={setLikedState}
                 followingState={followingState}
+                setFollowingState={setFollowingState}
+                likes={likes}
+                setLikes={setLikes}
+                comments={comments}
                 post={post}
                 isActive={isActive}
                 muted={muted}

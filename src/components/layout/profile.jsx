@@ -7,6 +7,7 @@ const Profile = () => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const { navBarData } = useContext(Context);
+  console.log(navBarData);
   const profilepic = navBarData.profile_picture;
   const { logout } = useAuth();
 
@@ -48,11 +49,11 @@ const Profile = () => {
             <div className="border-t border-slate-500/30"></div>
             <div className="flex justify-around">
               <div className="flex flex-col items-center justify-center pixel-text">
-                <span className="text-3xl font-semibold">268</span>
+                <span className="text-3xl font-semibold">1</span>
                 <span className="text-sm text-slate-400">Following</span>
               </div>
               <div className="flex flex-col items-center justify-center ">
-                <span className="text-3xl font-semibold">897</span>
+                <span className="text-3xl font-semibold">1</span>
                 <span className="text-sm text-slate-400">Followers</span>
               </div>
             </div>
@@ -64,7 +65,7 @@ const Profile = () => {
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
+                  viewBox="0 0 24 24"npm
                   fill="currentColor"
                   className="h-5 w-5"
                 >

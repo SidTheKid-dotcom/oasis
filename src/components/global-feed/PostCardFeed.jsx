@@ -1,18 +1,31 @@
+import { useState, useContext } from 'react';
 import ReactPlayer from 'react-player';
 import Link from 'next/link';
 import axios from "axios";
+import { useAuth } from "@/context/authContext";
+import { Context } from "../layout/Context";
+import { Toaster } from 'sonner';
+import { toast } from 'sonner';
 
 export default function PostCardFeed({
     loadMedia,
     likedState,
     setLikedState,
     followingState,
+    setFollowingState,
+    likes,
+    setLikes,
+    comments,
     post,
     isActive,
     muted,
     setMuted,
     playerRef,
 }) {
+
+    const { token } = useAuth();
+    const { navBarData } = useContext(Context);
+
     const toggleMute = () => setMuted(prevMuted => !prevMuted);
 
     const renderMedia = () => {
@@ -47,27 +60,77 @@ export default function PostCardFeed({
         );
     };
 
-    const togglePostLike = async () => {
+    const toggleFollowUser = async () => {
         try {
-            const token = localStorage.getItem('token');
-            await axios.post(
-                'http://3.110.161.150:4000/api/post/like',
-                { postId: post.id },
+            await axios.post('http://3.110.161.150:4000/api/user/follow',
+                { userId: post.user.id },
                 {
                     headers: {
                         'Authorization': token,
                         'Content-Type': 'application/json',
                     },
                 }
-            );
-            setLikedState(prevState => !prevState);
+            )
+            setFollowingState(prevState => !prevState)
+            toast('User Followed Successfully', {
+                position: 'top-right',
+                className: 'bg-black text-white pixel-text border border-solid border-green-400',
+            })
+        }
+        catch (error) {
+            console.error('Error occired while following user ', error)
+        }
+    }
+
+    const togglePostLike = async () => {
+
+        try {
+            if (!likedState) {
+                await axios.post(
+                    'http://3.110.161.150:4000/api/post/like',
+                    { postId: post.id },
+                    {
+                        headers: {
+                            'Authorization': token,
+                            'Content-Type': 'application/json',
+                        },
+                    }
+                );
+                toast('Post Liked Successfully', {
+                    position: 'top-right',
+                    className: 'bg-black text-white pixel-text border border-solid border-green-400',
+                });
+                setLikes(prevLikes => prevLikes + 1);
+                setLikedState(true);
+            } else {
+                await axios.delete(
+                    'http://3.110.161.150:4000/api/post/unlike',
+                    {
+                        headers: {
+                            'Authorization': token,
+                            'Content-Type': 'application/json',
+                        },
+                        data: {
+                            postId: post.id
+                        },
+                    }
+                );
+                toast('Post Unliked Successfully', {
+                    position: 'top-right',
+                    className: 'bg-black text-white pixel-text border border-solid border-red-500',
+                });
+                setLikes(prevLikes => prevLikes - 1);
+                setLikedState(false);
+            }
         } catch (error) {
             console.log('Error occurred while toggling post like: ', error);
         }
     };
 
     return (
+
         <div className="lazy-post-card w-full pixel-text">
+            <Toaster />
             <div className="py-[1rem] px-[2rem] text-white flex flex-col min-h-[100px] border-y border-blue-500">
                 <section>
                     <div className="mt-[1rem] grid grid-cols-12 items-center">
@@ -81,14 +144,18 @@ export default function PostCardFeed({
                             </figure>
                         </div>
                         <div className="col-span-6 text-md flex flex-col justify-center">
-                            <div className="font-bold">{post.user.username}</div>
-                            <div className="text-sm">
-                                <i>@{post.community.name}</i>
-                            </div>
+                            <Link href={`/profile/${post.user.id}`}>
+                                <div className="font-bold">{post.user.username}</div>
+                            </Link>
+                            <Link href={`/community/${post.community.id}`}>
+                                <div className="text-sm">
+                                    <i>@{post.community.name}</i>
+                                </div>
+                            </Link>
                         </div>
                         <div className="col-span-3 flex flex-col items-center text-[1rem]">
-                            {!followingState && (
-                                <button className="m-2 p-2 px-3 min-w-[75px] bg-blue-500 rounded-[5px]">
+                            {!followingState && post.user.id !== navBarData.id && (
+                                <button onClick={toggleFollowUser} className="m-2 p-2 px-3 min-w-[75px] bg-blue-500 rounded-[5px]">
                                     Follow
                                 </button>
                             )}
@@ -113,7 +180,7 @@ export default function PostCardFeed({
                             <figure>
                                 <img src={likedState ? '/heart-solid.svg' : '/heart-regular.svg'} width="25px" alt="Heart Icon" />
                             </figure>
-                            <figcaption>{post.likes}</figcaption>
+                            <figcaption>{likes}</figcaption>
                         </button>
                         <div className="flex flex-col">
                             <Link href={{ pathname: '/post-card', query: { postId: post.id } }}>
@@ -121,7 +188,7 @@ export default function PostCardFeed({
                                     <figure>
                                         <img src="/comment-regular.svg" width="25px" alt="Comment Icon" />
                                     </figure>
-                                    <figcaption>{post.comments}</figcaption>
+                                    <figcaption>{comments}</figcaption>
                                 </button>
                             </Link>
                         </div>

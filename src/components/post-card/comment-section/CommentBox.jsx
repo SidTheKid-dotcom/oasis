@@ -3,6 +3,7 @@ import axios from "axios";
 
 import EmojiPicker from 'emoji-picker-react';
 import GifPicker from "gif-picker-react";
+import { toast } from "sonner";
 
 export default function CommentBox({ postId, setComments }) {
     const [comment, setComment] = useState('');
@@ -35,6 +36,10 @@ export default function CommentBox({ postId, setComments }) {
                 setComments(prev => [...prev, response.data._comment]);
                 setComment('');
                 setGifURL(null);
+                toast('Comment Posted Successfully', {
+                    position: 'top-right',
+                    className: 'bg-black text-white pixel-text border border-solid border-green-400',
+                })
             }
         } catch (error) {
             console.log('error in posting comment: ', error);
@@ -142,7 +147,7 @@ export default function CommentBox({ postId, setComments }) {
                     {
                         gifURL && (
                             <button onClick={handleRemoveGif} className="bg-red-400 p-2 rounded-[15px] max-h-[40px]">Discard GIF</button>
-                        ) 
+                        )
                     }
                 </div>
             </div>

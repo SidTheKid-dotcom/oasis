@@ -9,18 +9,19 @@ export default function GlobalFeed() {
 
     useEffect(() => {
         const fetchPosts = async () => {
-            const cachedPosts = localStorage.getItem('cachedPosts');
+            /* const cachedPosts = localStorage.getItem('cachedPosts');
             if (cachedPosts) {
                 setPosts(JSON.parse(cachedPosts));
-            } else {
-                try {
-                    const response = await axios.get('http://3.110.161.150:4000/feed/global');
-                    localStorage.setItem('cachedPosts', JSON.stringify(response.data));
-                    setPosts(response.data);
-                } catch (error) {
-                    console.warn('Error occurred in fetching posts: ', error);
-                }
+            } else { */
+            try {
+                const response = await axios.get('http://3.110.161.150:4000/feed/global');
+                //localStorage.setItem('cachedPosts', JSON.stringify(response.data));
+                console.log(response.data);
+                setPosts(response.data);
+            } catch (error) {
+                console.warn('Error occurred in fetching posts: ', error);
             }
+            /* } */
         };
 
         fetchPosts();
