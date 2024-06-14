@@ -1,77 +1,157 @@
-"use client"
+"use client";
 import { HiUsers } from "react-icons/hi";
-import axios from "axios";
+import { Toaster, toast } from "sonner";
 import { useEffect, useState } from "react";
-
-import{ formatDistanceToNow} from 'date-fns'
-
-
-
+import { MdEdit } from "react-icons/md";
+import Link from "next/link";
+import api from "@/api/api";
+import CommunityPosts from "@/components/community/CommunityPosts";
 
 export default function Page({ params }) {
-    const [community, setCommunity] = useState(null);
-  
-    const getCommunity = async (id) => {
-      try {
-        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJ0ZXN0MSIsImVtYWlsIjoia2lyYUBnbWFpbC5jb20iLCJpYXQiOjE3MTQyOTkwMDF9.1ZuTu6j00mouWxrPwrWR8u3Fn9RmLwuqeRE_gBJrR24";
-        const response = await axios.get(
-          `http://3.110.161.150:4000/api/community?id=${id}`,
-          {
-            headers: {
-              "Authorization": `Bearer ${token}`
-            }
-          }
-        );
-        const responseData = response.data;
-        console.log(responseData)
-        setCommunity(responseData);
-      } catch (error) {
-        console.log("Error", error);
+  const [community, setCommunity] = useState(null);
+  const [isFollowing, setIsFollowing] = useState(false);
+
+  const handleFollowToggle = async () => {
+    try {
+      if (!isFollowing) {
+        const response = await api.post("/community/subscribe", {
+          community_id: params.id,
+        });
+        console.log(response);
+        setIsFollowing(true);
+        toast("Subscription added", {
+          position: "top-right",
+          className:
+            "bg-black text-white pixel-text border border-solid border-green-400",
+        });
+        setCommunity((prevCommunity) => ({
+          ...prevCommunity,
+          isSubscribed: true,
+        }));
+      } else {
+        const response = await api.delete("/community/unsubscribe", {
+          data: { community_id: params.id },
+        });
+        console.log(response);
+        setIsFollowing(false);
+        setCommunity((prevCommunity) => ({
+          ...prevCommunity,
+          isSubscribed: false,
+        }));
       }
-    };
-  
-    useEffect(() => {
-      getCommunity(params.id);
-    }, [params.id]);
-  
-    return (
-      <div className="mt-9 w-1/2 ml-8">
+    } catch (error) {
+      console.error("Error during follow toggle:", error);
+    }
+  };
+
+  const getCommunity = async (id) => {
+    try {
+      const response = await api.get(`/community?id=${id}`);
+      const responseData = response.data;
+      console.log(responseData);
+      setCommunity(responseData);
+      setIsFollowing(responseData.isSubscribed);
+    } catch (error) {
+      console.error("Error fetching community data:", error);
+    }
+  };
+
+  useEffect(() => {
+    getCommunity(params.id);
+  }, [params.id, isFollowing]);
+
+  return (
+    <div className="md:mt-5 mt-4 md:w-[67%] md:mx-auto bg-black bg-opacity-80 md:bg-none md:bg-opacity-0 mx-3 mt-10 sm:mt-0  ">
+      <Toaster />
+      <div className="p-6">
         {community && (
           <div className="relative">
             <div className="cursor-pointer">
-              <img src={community.banner} className="h-[300px] w-full" />
+              <img
+                src={community.banner}
+                className="h-48 md:h-[270px] w-full"
+              />
             </div>
             <div className="flex justify-center cursor-pointer">
               <img
                 src={community.icon}
                 alt=""
-                className="rounded-full w-36 h-36 z-20 absolute mt-[-13%] bg-black"
+                className="rounded-full h-20 w-20 md:h-28 md:w-28 z-20 absolute mt-[-9%] bg-black"
               />
             </div>
-            <div className="flex justify-between mt-2 text-2xl">
-              <p className="text-white font-bold">{community.name}</p>
+            <div className="flex justify-between mt-14 text-lg ">
+              <p className="font-bold text-[#00B2FF] pixel-text">
+                {community.name}
+              </p>
               <div className="flex my-auto ml-3">
                 <div className="my-auto">
-                  <HiUsers color="white" fill="white" fontSize="25px" />
+                  <HiUsers color="white" fill="white" fontSize="20px" />
                 </div>
-                <p className="text-white text-sm font-medium ml-1 text-2xl">{community.no_of_subscribers}</p>
+                <p className="text-white text-sm font-medium ml-1 pixel-text text-2xl">
+                  {community.no_of_subscribers}
+                </p>
               </div>
             </div>
-            <div className="flex justify-between mt-4">
+            <div className=" flex">
+              <img
+                src={community.creator.profile_picture}
+                alt=""
+                className="  mr-2 my-auto rounded-full h-10 w-10"
+              />
+              <p className=" text-white my-auto">
+                {community.creator.username}
+              </p>
+            </div>
+
+            <div className="flex justify-between mt-3 text-sm">
               <div className="flex">
-                <button className="border-[1.5px] rounded-3xl p-2 text-white border-[#767676]">Create Post +</button>
-                <button className="ml-4 border-[1.5px] rounded-3xl p-2 text-white border-[#767676] px-4">Follow</button>
-                <p className="ml-4 text-white my-auto">{formatDistanceToNow(new Date(community.created_at),{addSuffix:true})}</p>
+                <div>
+                  <Link href="/create/post">
+                    {(community.amcreator || isFollowing) && (
+                      <button className="border-[1.5px] rounded-md p-1 mr-1 md:p-2 my-auto text-white  text-[0.5rem] border-[#767676] md:text-md pixel-text">
+                        Create Post +
+                      </button>
+                    )}
+                  </Link>
+                </div>
+
+                <p
+                  className={`text-white rounded-md my-auto md:p-2 border-[#767676] border-[1.5px] p-1 sm:font-semibold px-2 md:px-4 text-[0.5rem] md:text-bse text-center cursor-pointer pixel-text ${
+                    isFollowing ? "" : "bg-[#00b2ff]"
+                  }`}
+                  onClick={handleFollowToggle}
+                >
+                  {isFollowing ? "Subscribed" : "Subscribe"}
+                </p>
+
+                {community.amcreator && (
+                  <div className="my-auto">
+                    <Link href={`/EditCommunity/${community.id}`}>
+                      <div className="flex ml-2">
+                        <p className="my-auto text-white pixel-text text-xs md:text-md">
+                          Edit
+                        </p>
+                        <MdEdit
+                          color="#00b2ff"
+                          size={20}
+                          className="my-auto ml-1"
+                        />
+                      </div>
+                    </Link>
+                  </div>
+                )}
               </div>
-              <p className="text-[#828282] text-xl">{community.type}</p>
+              <p className="text-[#828282] text-sm pixel-text my-auto">
+                {community.type}
+              </p>
             </div>
           </div>
         )}
-        <div className="text-white my-4">
+        <div className="text-white my-4 text-xs md:text-base">
           {community && <p>{community.description}</p>}
         </div>
       </div>
-    );
-  }
-     
-
+      {isFollowing && <CommunityPosts posts={community.posts} />}
+    </div>
+  );
+}
