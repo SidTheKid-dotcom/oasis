@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+import Posts from "../../global-feed/Post";
 import Link from 'next/link';
 
 export default function UserPosts({ posts, setConfirmDelete, editable }) {
+
+    const [muted, setMuted] = useState(true);
 
     /* useEffect(() => {
         const updateUserPosts = async () => {
@@ -52,74 +55,16 @@ export default function UserPosts({ posts, setConfirmDelete, editable }) {
                 <button className="p-2 border border-solid border-slate-400 bg-[#2a313d] font-[2rem] rounded-full">+ Create Post &nbsp;</button>
             </Link>
             }
-            {
-                posts?.map((post, index) => {
-                    const [likedSVG, setLikedSVG] = useState((post.liked) ? true : false);
-                    const [imageSrc, setImageSrc] = useState((post.liked) ? '/heart-solid.svg' : '/heart-regular.svg');
-
-                    const handlePostLiked = () => {
-                        setLikedSVG(liked => !liked);
-
-                        if (!likedSVG) {
-                            setImageSrc('heart-solid.svg');
-                            posts[index].likes += 1;
-                            posts[index].liked = true;
-                        } else {
-                            setImageSrc('heart-regular.svg');
-                            posts[index].likes -= 1;
-                            posts[index].liked = false;
-                        }
-                    }
-
-
-                    return (
-                        <div key={index} className="bg-black my-4 border border-solid border-slate-400 rounded-2xl py-4 px-6">
-                            <section className="flex flex-row justify-between">
-                                <div className="flex flex-col gap-2">
-                                    <h1 className="font-bold text-2xl">{post.title}</h1>
-                                    <h1 className="font-bold text-md">@{post.community.name}</h1>
-                                </div>
-                                {
-                                    editable && (
-                                        <button onClick={() => handleDeletePost(post.id)}>
-                                            <figure>
-                                                <img src='/trash-solid.svg' width="20px" height="20px" className="mt-[-20px]"></img>
-                                            </figure>
-                                        </button>
-                                    )
-                                }
-                            </section>
-                            <section className="my-4">{post.description}</section>
-                            <section className="flex flex-row gap-5">
-                                <div>
-                                    <button>
-                                        <figure className="flex flex-col items-center">
-                                            <img src={imageSrc} className="w-[25px]"></img>
-                                            <figcaption>{post.no_of_likes}</figcaption>
-                                        </figure>
-                                    </button>
-                                </div>
-                                <div>
-                                    <Link href={{ pathname: '/post-card', query: { postId: post.id } }}>
-                                        <button>
-                                            <figure>
-                                                <img src='/comment-regular.svg' width="25px" alt="Comment Icon" />
-                                            </figure>
-                                            <figcaption>{post.comments}</figcaption>
-                                        </button>
-                                    </Link>
-                                </div>
-                                <div>
-                                    <figure className="flex flex-col items-center">
-                                        <img src='/share-solid.svg' className="w-[25px]"></img>
-                                        <figcaption>{post.shares}</figcaption>
-                                    </figure>
-                                </div>
-                            </section>
-                        </div>
-                    )
-                })
-            }
+            <div className="mt-[1rem] w-full flex flex-col items-center overflow-hidden">
+                {posts.map(post => (
+                    <Posts
+                        key={post.id}
+                        post={post}
+                        muted={muted}
+                        setMuted={setMuted}
+                    />
+                ))}
+            </div>
         </div>
     )
 }

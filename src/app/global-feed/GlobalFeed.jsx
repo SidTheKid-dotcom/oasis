@@ -4,7 +4,6 @@ import Posts from '../../components/global-feed/Post';
 
 export default function GlobalFeed() {
     const [posts, setPosts] = useState([]);
-    const [activeVideoId, setActiveVideoId] = useState(null);
     const [muted, setMuted] = useState(true);
 
     useEffect(() => {
@@ -27,8 +26,6 @@ export default function GlobalFeed() {
                 <Posts
                     key={post.id}
                     post={post}
-                    isActive={post.id === activeVideoId}
-                    setActiveVideoId={setActiveVideoId}
                     muted={muted}
                     setMuted={setMuted}
                 />

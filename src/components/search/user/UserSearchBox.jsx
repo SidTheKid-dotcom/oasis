@@ -65,7 +65,7 @@ export default function UserSearchBox({ onBlur }) {
     }, [onBlur]);
 
     return (
-        <div className="relative m-3 w-[150px] md: w-[300px]" ref={searchBoxRef}>
+        <div className="relative m-3 w-[150px] md:w-[300px]" ref={searchBoxRef}>
             <div className="relative text-white pixel-text w-full flex flex-row">
                 <input
                     type="text"
