@@ -6,7 +6,7 @@ import axios from "axios";
 import { MdOutlineSearch } from "react-icons/md";
 import DisplayUsers from "./DisplayUsers";
 
-function UserSearchBox({ onBlur }) {
+export default function UserSearchBox({ onBlur }) {
 
     const router = useRouter();
 
