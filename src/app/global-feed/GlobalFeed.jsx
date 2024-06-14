@@ -1,3 +1,5 @@
+'use effect';
+
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Posts from '../../components/global-feed/Post';

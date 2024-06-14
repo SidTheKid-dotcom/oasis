@@ -56,7 +56,7 @@ export default function UserPosts({ posts, setConfirmDelete, editable }) {
             </Link>
             }
             <div className="mt-[1rem] w-full flex flex-col items-center overflow-hidden">
-                {posts.map(post => (
+                {posts?.map(post => (
                     <Posts
                         key={post.id}
                         post={post}
