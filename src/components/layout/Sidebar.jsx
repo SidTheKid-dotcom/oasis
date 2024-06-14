@@ -1,14 +1,14 @@
 "use client";
-import React,{useContext} from "react";
+import React, { useContext } from "react";
 import { IoMdHome } from "react-icons/io";
 import { IoIosPeople } from "react-icons/io";
 import { SlCalender } from "react-icons/sl";
 import { BsFire } from "react-icons/bs";
-// import { useRouter } from 'next/navigation';
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Context } from "./Context";
+import PopularAccounts from "../global-feed/PopularAccounts";
 
 export default function Sidebar() {
   const { navBarData } = useContext(Context);
@@ -28,7 +28,7 @@ export default function Sidebar() {
             <div className=" flex my-4">
               <IoMdHome className=" my-auto" size={30} />
               <p className={`my-auto pixel-text ml-2 ${pathname === "/" ? "text-blue-500" : ""
-                  }`}>Home </p>
+                }`}>Home </p>
             </div>
           </Link>
           <Link href="/communities">
@@ -62,23 +62,26 @@ export default function Sidebar() {
                 Top Communities{" "}
               </p>
             </div>
+            <div className="lg:hidden">
+              <PopularAccounts />
+            </div>
             {navBarData.subscribed_communities && navBarData.subscribed_communities.map((menu, index) => (
-              <li key={index} onClick={() => {router.push(`/communities/${menu.community.id}`)}}
-              className={`text-sm cursor-pointer h-14 flex items-center px-3 mb-3 rounded-lg hover:bg-[#4B84FF]/[0.45] hover:bg-[#4B84FF][0.45]`}>
-              <img
+              <li key={index} onClick={() => { router.push(`/communities/${menu.community.id}`) }}
+                className={`text-sm cursor-pointer h-14 flex items-center px-3 mb-3 rounded-lg hover:bg-[#4B84FF]/[0.45] hover:bg-[#4B84FF][0.45]`}>
+                <img
                   className="w-11 overflow-hidden object-cover"
                   src={menu.community.image}
                   alt="Profile"
                   size={25}
                   round={true}
                 />
-              <span
-              className='origin-left duration-300 hover:block pl-3'
-              >
-              <h1 className="text-[18px] font-light text-[#41a3ff]" >{menu.community.name}</h1>
-              <h5 className="text-[13px]">{menu.community.no_of_subscribers+' Subscribers'}</h5>
-              </span>
-          </li>
+                <span
+                  className='origin-left duration-300 hover:block pl-3'
+                >
+                  <h1 className="text-[18px] font-light text-[#41a3ff]" >{menu.community.name}</h1>
+                  <h5 className="text-[13px]">{menu.community.no_of_subscribers + ' Subscribers'}</h5>
+                </span>
+              </li>
             ))}
           </div>
         </div>
