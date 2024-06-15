@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+import api from "@/api/api";
+
 import { MdOutlineSearch } from "react-icons/md";
 
 export default function PostSearchBox({ setPosts, originalPosts }) {
@@ -22,7 +24,7 @@ export default function PostSearchBox({ setPosts, originalPosts }) {
                 console.log(search);
 
                 try {
-                    const response = await axios.post(`http://3.110.161.150:4000/search/post`, {
+                    const response = await api.post(`/search/post`, {
                         query: search
                     });
                     setPosts(response.data);

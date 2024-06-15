@@ -1,17 +1,15 @@
 "use client"
 
-import axios from "axios"
+import api from "@/api/api";
 
 export default function ConfirmDelete({ confirmDelete, setConfirmDelete }) {
 
     const handleConfirmDelete = async () => {
         try {
-            const token = localStorage.getItem('token');
             const postId = parseInt(confirmDelete.postId);
     
-            const response = await axios.delete('http://3.110.161.150:4000/post/delete', {
+            const response = await api.delete('/post/delete', {
                 headers: {
-                    'Authorization': token,
                     'Content-Type': 'application/json'
                 },
                 data: { postId } // Pass the data in the 'data' field

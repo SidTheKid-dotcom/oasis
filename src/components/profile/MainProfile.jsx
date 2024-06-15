@@ -21,6 +21,7 @@ import { toast } from "sonner"
 
 const { useAuth } = require("@/context/authContext");
 import { Context } from "../layout/Context";
+import api from "@/api/api"
 
 export default function MainProfile({ userInfo, setUserInfo, loading, }) {
 
@@ -56,11 +57,10 @@ export default function MainProfile({ userInfo, setUserInfo, loading, }) {
     const toggleFollowUser = async () => {
         try {
             if (!userInfo.amfollowing) {
-                const response = await axios.post('http://3.110.161.150:4000/api/user/follow',
+                const response = await api.post('/user/follow',
                     { userId: userInfo.id },
                     {
                         headers: {
-                            'Authorization': token,
                             'Content-Type': 'application/json',
                         },
                     }
@@ -76,10 +76,9 @@ export default function MainProfile({ userInfo, setUserInfo, loading, }) {
                 })
             }
             else {
-                await axios.delete('http://3.110.161.150:4000/api/user/unfollow',
+                await api.delete('/user/unfollow',
                     {
                         headers: {
-                            'Authorization': token,
                             'Content-Type': 'application/json',
                         },
                         data: {

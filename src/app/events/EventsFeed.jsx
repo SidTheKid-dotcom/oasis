@@ -4,6 +4,8 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Event from "../../components/events/Event";
 
+import api from "@/api/api";
+
 export default function EventsFeed() {
     const [events, setEvents] = useState([]);
     const [activeVideoId, setActiveVideoId] = useState(null);
@@ -12,10 +14,8 @@ export default function EventsFeed() {
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                const token = localStorage.getItem('token')
-                const response = await axios.get('http://3.110.161.150:4000/api/event/checkoutevents', {
+                const response = await api.get('/event/checkoutevents', {
                     headers: {
-                        'Authorization': token,
                         'Content-Type': 'application/json'
                     }
                 });

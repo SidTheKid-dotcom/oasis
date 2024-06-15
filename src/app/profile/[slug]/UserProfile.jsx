@@ -2,14 +2,14 @@
 'use client'
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useAuth } from "@/context/authContext";
 import FollowersCard from "../../../components/profile/FollowersCard";
 import MainProfile from "../../../components/profile/MainProfile";
 import FollowersCardSkeleton from "../../../components/profile/skeletons/FollowersCardSkeleton";
 import MainProfileSkeleton from "../../../components/profile/skeletons/MainProfileSkeleton";
 
+import api from "@/api/api";
+
 export default function UserProfile({ params }) {
-  const { token } = useAuth();
   const [userInfo, setUserInfo] = useState({});
   const [loading, setLoading] = useState(true);
 
@@ -17,9 +17,8 @@ export default function UserProfile({ params }) {
     const fetchUserInfo = async () => {
       if (token) {
         try {
-          const response = await axios.get(`http://3.110.161.150:4000/api/user/profile?userId=${params.slug}`, {
+          const response = await api.get(`/user/profile?userId=${params.slug}`, {
             headers: {
-              'Authorization': token,
               'Content-Type': 'application/json',
             },
           });

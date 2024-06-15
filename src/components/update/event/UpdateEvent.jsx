@@ -6,6 +6,8 @@ import EventDetails from "./EventDetails";
 import EventType from "./EventType";
 import UploadImage from "../UploadImage";
 
+import api from "@/api/api";
+
 export default function UpdateEvent({ displayType, values }) {
 
   // State management of text input fields
@@ -50,17 +52,14 @@ export default function UpdateEvent({ displayType, values }) {
     const token = localStorage.getItem('token');
 
     try {
-      const response = await axios.put(
-        'http://3.110.161.150:4000/api/event/updateevent', formData,
+      const response = await api.put(
+        '/event/updateevent', formData,
         {
           headers: {
-            'Authorization': token,
             'Content-Type': 'multipart/form-data'
           }
         }
       );
-
-      console.log(response.data);
 
       // Navigate back to events page if response.status is 201
     } catch (error) {

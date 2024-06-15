@@ -6,6 +6,8 @@ import axios from "axios";
 import { MdOutlineSearch } from "react-icons/md";
 import DisplayUsers from "./DisplayUsers";
 
+import api from "@/api/api";
+
 export default function UserSearchBox({ onBlur }) {
 
     const router = useRouter();
@@ -21,7 +23,7 @@ export default function UserSearchBox({ onBlur }) {
                 setIsRequesting(true);
 
                 try {
-                    const response = await axios.post(`http://3.110.161.150:4000/search/user`, {
+                    const response = await api.post(`/search/user`, {
                         query: search
                     });
 

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import UpdateEvent from "../../../components/update/event/UpdateEvent"
 
-import axios from "axios";
+import api from "@/api/api";
 
 export default function UpdateEventPage() {
 
@@ -16,13 +16,10 @@ export default function UpdateEventPage() {
 
         const fetchEventData = async () => {
 
-            const token = localStorage.getItem('token');
-
             try {
 
-                const response = await axios.get(`http://3.110.161.150:4000/api/event/fetchEvent?id=${eventId}`, {
+                const response = await api.get(`/event/fetchEvent?id=${eventId}`, {
                     headers: {
-                        'Authorization': token,
                         'Content-Type': 'application/json'
                     }
                 });

@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from "next/navigation";
-import axios from 'axios';
 
 const { useAuth } = require("@/context/authContext");
+
+import api from '@/api/api';
 
 const PeopleYouMightKnow = () => {
   const [suggestions, setSuggestions] = useState([]);
@@ -16,10 +17,8 @@ const PeopleYouMightKnow = () => {
   useEffect(() => {
     const fetchSuggestions = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get('http://3.110.161.150:4000/userRecommendations', {
+        const response = await api.get('/userRecommendations', {
           headers: {
-            'Authorization': token,
             'Content-Type': 'application/json',
           },
         });
@@ -42,11 +41,10 @@ const PeopleYouMightKnow = () => {
 
   const handleFollowUser = async (userId) => {
 
-    await axios.post('http://3.110.161.150:4000/api/user/follow',
+    await api.post('/user/follow',
       { userId: userId },
       {
         headers: {
-          'Authorization': token,
           'Content-Type': 'application/json',
         },
       }

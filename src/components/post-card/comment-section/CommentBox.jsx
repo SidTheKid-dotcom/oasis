@@ -5,6 +5,8 @@ import EmojiPicker from 'emoji-picker-react';
 import GifPicker from "gif-picker-react";
 import { toast } from "sonner";
 
+import api from "@/api/api";
+
 export default function CommentBox({ postId, setComments }) {
     const [comment, setComment] = useState('');
     const [displayEmojiPicker, setDisplayEmojiPicker] = useState(false);
@@ -15,10 +17,9 @@ export default function CommentBox({ postId, setComments }) {
 
     const handlePostComment = async () => {
         try {
-            const token = localStorage.getItem('token');
 
-            const response = await axios.post(
-                'http://3.110.161.150:4000/api/post/comment',
+            const response = await api.post(
+                '/post/comment',
                 {
                     postId: parseInt(postId),
                     comment: comment,
@@ -26,7 +27,6 @@ export default function CommentBox({ postId, setComments }) {
                 },
                 {
                     headers: {
-                        'Authorization': token,
                         'Content-Type': 'application/json'
                     }
                 }

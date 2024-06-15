@@ -5,6 +5,7 @@ import axios from "axios";
 import { useAuth } from "@/context/authContext";
 import { Context } from "../layout/Context";
 import { Toaster, toast } from 'sonner';
+import api from '@/api/api';
 
 export default function PostCardFeed({
     loadMedia,
@@ -65,11 +66,10 @@ export default function PostCardFeed({
 
     const toggleFollowUser = async () => {
         try {
-            await axios.post('http://3.110.161.150:4000/api/user/follow',
+            await api.post('/user/follow',
                 { userId: post.user.id },
                 {
                     headers: {
-                        'Authorization': token,
                         'Content-Type': 'application/json',
                     },
                 }
@@ -87,12 +87,11 @@ export default function PostCardFeed({
     const togglePostLike = async () => {
         try {
             if (!likedState) {
-                await axios.post(
-                    'http://3.110.161.150:4000/api/post/like',
+                await api.post(
+                    '/post/like',
                     { postId: post.id },
                     {
                         headers: {
-                            'Authorization': token,
                             'Content-Type': 'application/json',
                         },
                     }
@@ -104,11 +103,10 @@ export default function PostCardFeed({
                 setLikes(prevLikes => prevLikes + 1);
                 setLikedState(true);
             } else {
-                await axios.delete(
-                    'http://3.110.161.150:4000/api/post/unlike',
+                await api.delete(
+                    '/post/unlike',
                     {
                         headers: {
-                            'Authorization': token,
                             'Content-Type': 'application/json',
                         },
                         data: {

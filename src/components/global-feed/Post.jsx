@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import axios from 'axios';
 import PostCardFeed from './PostCardFeed';
+
+import api from '@/api/api';
 
 export default function Posts({ post, muted, setMuted, onClick }) {
     const [likedState, setLikedState] = useState(null);
@@ -16,9 +17,8 @@ export default function Posts({ post, muted, setMuted, onClick }) {
     const fetchPostState = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get(`http://3.110.161.150:4000/post/state?id=${post.id}`, {
+            const response = await api.get(`/post/state?id=${post.id}`, {
                 headers: {
-                    Authorization: token,
                     'Content-Type': 'application/json',
                 },
             });

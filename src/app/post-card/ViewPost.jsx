@@ -7,6 +7,8 @@ import axios from "axios";
 import PostCard from "../../components/post-card/PostCard";
 import CommentSection from "../../components/post-card/comment-section/CommentSection";
 
+import api from "@/api/api";
+
 export default function ViewPost() {
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState(null);
@@ -17,12 +19,10 @@ export default function ViewPost() {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const { data } = await axios.get(
-          `http://3.110.161.150:4000/post/v2?id=${postId}`,
+        const { data } = await api.get(
+          `/post/v2?id=${postId}`,
           {
             headers: {
-              Authorization: token,
               "Content-Type": "application/json",
             },
           }
