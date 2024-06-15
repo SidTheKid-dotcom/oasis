@@ -1,6 +1,5 @@
-'use'
+'use client'
 import { createContext, useState, useEffect } from "react";
-import axios from "axios";
 export const Context = createContext();
 
 import api from "@/api/api";

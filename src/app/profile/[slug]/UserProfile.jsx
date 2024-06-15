@@ -15,24 +15,22 @@ export default function UserProfile({ params }) {
 
   useEffect(() => {
     const fetchUserInfo = async () => {
-      if (token) {
-        try {
-          const response = await api.get(`/user/profile?userId=${params.slug}`, {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-          setUserInfo(response.data);
-        } catch (error) {
-          console.log("error occurred while fetching user's info: ", error);
-        } finally {
-          setLoading(false);
-        }
+      try {
+        const response = await api.get(`/user/profile?userId=${params.slug}`, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        setUserInfo(response.data);
+      } catch (error) {
+        console.log("error occurred while fetching user's info: ", error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchUserInfo();
-  }, [token, params.slug]);
+  }, [params.slug]);
 
   return (
     <div className="grid grid-cols-12 mt-[2rem]">

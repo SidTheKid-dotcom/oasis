@@ -4,8 +4,6 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Posts from '../../components/global-feed/Post';
 
-import api from '@/api/api';
-
 export default function GlobalFeed() {
     const [posts, setPosts] = useState([]);
     const [muted, setMuted] = useState(true);
@@ -13,7 +11,7 @@ export default function GlobalFeed() {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const response = await api.get('/feed/global');
+                const response = await axios.get('http://3.110.161.150:4000/feed/global');
                 setPosts(response.data);
             } catch (error) {
                 console.warn('Error occurred in fetching posts: ', error);

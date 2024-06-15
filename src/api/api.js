@@ -1,3 +1,4 @@
+// api.js
 import axios from "axios";
 import { useAuth } from "@/context/authContext";
 
@@ -7,19 +8,24 @@ const api = axios.create({
   baseURL,
 });
 
-api.interceptors.request.use(
-  (config) => {
-    const token = useAuth();
+// Custom Axios interceptor function
+const setupAxiosInterceptors = (instance) => {
+  instance.interceptors.request.use(
+    async (config) => {
+      const token = localStorage.getItem("token");
 
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
+      if (token) {
+        config.headers["Authorization"] = `Bearer ${token}`;
+      }
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
     }
-    return config;
-  },
-  (error) => {
+  );
+};
 
-    return Promise.reject(error);
-  }
-);
+// Setup interceptors
+setupAxiosInterceptors(api);
 
 export default api;

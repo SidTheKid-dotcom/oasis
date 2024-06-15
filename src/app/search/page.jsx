@@ -5,8 +5,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import Posts from "@/components/global-feed/Post";
 
-import api from "@/api/api";
-
 function SearchPage() {
 
     const searchParams = useSearchParams();
@@ -30,7 +28,7 @@ function SearchPage() {
         if (search) {
             const getPosts = async () => {
                 try {
-                    const response = await api.post(`/search/post`, {
+                    const response = await axios.post(`http://3.110.161.150:4000/search/post`, {
                         query: search
                     });
                     setSearchData(prevSearchData => ({ ...prevSearchData, posts: response.data }));

@@ -5,7 +5,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/authContext";
 
-import api from "@/api/api";
+const BASE_URL = "http://3.110.161.150:4000";
 
 export default function Form() {
   const [mode, setMode] = useState("Sign In");
@@ -21,7 +21,7 @@ export default function Form() {
   const signIn = async () => {
     try {
       setLoading(true);
-      const response = await api.post("/user/login", {
+      const response = await axios.post(BASE_URL + "/api/user/login", {
         user_cred: email,
         password: password,
       });
@@ -42,7 +42,7 @@ export default function Form() {
     try {
       setLoading(true);
       if (password === conpassword) {
-        const response = await api.post("/user/register", {
+        const response = await axios.post(BASE_URL + "/api/user/register", {
           username: username,
           email: email,
           password: password,
