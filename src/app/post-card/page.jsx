@@ -1,4 +1,4 @@
-import { Suspense } from "next/navigation";
+import { Suspense } from "react";
 import ViewPost from "./ViewPost";
 
 export default function ViewPostPage() {
